@@ -1,7 +1,6 @@
 package team.moca.camo.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,7 +13,6 @@ import team.moca.camo.security.JwtAuthenticationFilter;
 
 import javax.servlet.Filter;
 
-@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 

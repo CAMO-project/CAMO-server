@@ -11,10 +11,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import team.moca.camo.security.JwtAuthenticationFilter;
 
-import javax.servlet.Filter;
-
 @EnableWebSecurity
 public class WebSecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
@@ -26,14 +30,14 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         authorization -> authorization
                                 .requestMatchers().permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .sessionManagement(
                         session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterBefore(
-                        jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class
+                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
                 )
                 .exceptionHandling(
                         exceptionHandling -> exceptionHandling
@@ -44,10 +48,5 @@ public class WebSecurityConfig {
                 );
 
         return http.build();
-    }
-
-    @Bean
-    public Filter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
     }
 }

@@ -1,22 +1,10 @@
 package team.moca.camo.security;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+public interface JwtProperties {
 
-import java.util.Base64;
+    String getIssuer();
 
-@Getter
-@Setter
-@ConfigurationProperties("jwt")
-@Component
-public class JwtProperties {
+    String getSecretKey();
 
-    private String issuer;
-    private String secretKey;
-
-    public byte[] getEncodedSecretKey() {
-        return Base64.getEncoder().encode(secretKey.getBytes());
-    }
+    byte[] getEncodedSecretKey();
 }

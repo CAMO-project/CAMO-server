@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import team.moca.camo.TestUtils;
 import team.moca.camo.domain.User;
+import team.moca.camo.security.mock.MockJwtProperties;
 
 import java.time.Duration;
 
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class JwtUtilsTest {
 
-    private final JwtUtils jwtUtils = new JwtUtils(new JwtTestProperties());
+    private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties());
 
     @DisplayName("JWT를 생성할 수 있다.")
     @Test

@@ -4,7 +4,5 @@ public interface JwtProperties {
 
     String getIssuer();
 
-    String getSecretKey();
-
     byte[] getEncodedSecretKey();
 }

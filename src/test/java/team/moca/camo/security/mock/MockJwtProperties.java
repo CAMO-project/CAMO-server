@@ -1,11 +1,12 @@
-package team.moca.camo.security;
+package team.moca.camo.security.mock;
 
 import lombok.Getter;
+import team.moca.camo.security.JwtProperties;
 
 import java.util.Base64;
 
 @Getter
-public class JwtTestProperties implements JwtProperties {
+public class MockJwtProperties implements JwtProperties {
 
     private final String issuer = "test_issuer";
     private final String secretKey = "test_secret_key";

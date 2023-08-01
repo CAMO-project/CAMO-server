@@ -11,8 +11,8 @@ import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("JWT 테스트")
 @Slf4j
+@DisplayName("JWT 테스트")
 class JwtUtilsTest {
 
     private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties());

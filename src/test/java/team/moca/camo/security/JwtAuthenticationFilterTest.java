@@ -1,5 +1,6 @@
 package team.moca.camo.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import team.moca.camo.security.mock.MockJwtProperties;
 
 import java.time.Duration;
 
+@Slf4j
+@DisplayName("JwtAuthetnicationFilter 테스트")
 public class JwtAuthenticationFilterTest {
 
     private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties());

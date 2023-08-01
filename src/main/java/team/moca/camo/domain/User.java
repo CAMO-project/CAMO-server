@@ -6,10 +6,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Getter
 @Entity
@@ -33,6 +40,11 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "withdrawn")
     private boolean withdrawn;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "Role", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role_name")
+    private List<String> roles = new ArrayList<>();
+
     protected User() {
         super(Domain.USER);
     }
@@ -49,7 +61,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("USER"));
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(toList());
     }
 
     @Override

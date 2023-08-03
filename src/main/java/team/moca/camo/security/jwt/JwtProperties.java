@@ -1,4 +1,4 @@
-package team.moca.camo.security;
+package team.moca.camo.security.jwt;
 
 public interface JwtProperties {
 

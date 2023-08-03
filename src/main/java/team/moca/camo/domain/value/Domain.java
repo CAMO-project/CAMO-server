@@ -1,4 +1,4 @@
-package team.moca.camo.domain;
+package team.moca.camo.domain.value;
 
 import lombok.Getter;
 

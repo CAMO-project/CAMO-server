@@ -9,7 +9,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import team.moca.camo.security.JwtAuthenticationFilter;
+import team.moca.camo.security.jwt.JwtAuthenticationFilter;
 
 @EnableWebSecurity
 public class WebSecurityConfig {

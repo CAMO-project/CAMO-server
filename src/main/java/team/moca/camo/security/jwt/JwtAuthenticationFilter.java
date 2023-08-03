@@ -1,4 +1,4 @@
-package team.moca.camo.security;
+package team.moca.camo.security.jwt;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;

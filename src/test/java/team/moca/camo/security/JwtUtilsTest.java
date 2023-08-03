@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import team.moca.camo.TestUtils;
 import team.moca.camo.domain.User;
+import team.moca.camo.security.jwt.JwtUtils;
 import team.moca.camo.security.mock.MockJwtProperties;
 
 import java.time.Duration;

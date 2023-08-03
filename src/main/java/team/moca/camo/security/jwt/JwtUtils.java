@@ -1,4 +1,4 @@
-package team.moca.camo.security;
+package team.moca.camo.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;

@@ -1,4 +1,4 @@
-package team.moca.camo.security;
+package team.moca.camo.security.jwt;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -6,8 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import team.moca.camo.TestUtils;
 import team.moca.camo.domain.User;
-import team.moca.camo.security.jwt.JwtAuthenticationFilter;
-import team.moca.camo.security.jwt.JwtUtils;
 import team.moca.camo.security.mock.MockFilterChain;
 import team.moca.camo.security.mock.MockHttpServletRequest;
 import team.moca.camo.security.mock.MockJwtProperties;
@@ -18,7 +16,7 @@ import java.time.Duration;
 @DisplayName("JwtAuthetnicationFilter 테스트")
 public class JwtAuthenticationFilterTest {
 
-    private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties());
+    private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties(), null);
     private final JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
 
     @DisplayName("유효한 JWT의 경우 필터를 통과한다.")

@@ -17,8 +17,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,16 +28,12 @@ import static java.util.stream.Collectors.toList;
 @Entity
 public class User extends BaseEntity implements UserDetails {
 
-    @Email
-    @NotBlank
     @Column(name = "email", unique = true, nullable = false, updatable = false, length = 50)
     private String email;
 
-    @NotBlank
     @Column(name = "password", nullable = false, length = 50)
     private String password;
 
-    @NotBlank
     @Column(name = "phone", nullable = false, unique = true, length = 15)
     private String phone;
 

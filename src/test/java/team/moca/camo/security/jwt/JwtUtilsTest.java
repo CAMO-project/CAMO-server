@@ -1,11 +1,10 @@
-package team.moca.camo.security;
+package team.moca.camo.security.jwt;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import team.moca.camo.TestUtils;
 import team.moca.camo.domain.User;
-import team.moca.camo.security.jwt.JwtUtils;
 import team.moca.camo.security.mock.MockJwtProperties;
 
 import java.time.Duration;
@@ -16,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("JWT 테스트")
 class JwtUtilsTest {
 
-    private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties());
+    private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties(), null);
 
     @DisplayName("JWT를 생성할 수 있다.")
     @Test

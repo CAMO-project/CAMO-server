@@ -12,6 +12,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Getter
+@Table(name = "User")
 @Entity
 public class User extends BaseEntity implements UserDetails {
 

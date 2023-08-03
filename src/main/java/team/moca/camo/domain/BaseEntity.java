@@ -24,10 +24,12 @@ public class BaseEntity implements Serializable {
     private String id;
 
     @CreatedDate
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updateAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     private BaseEntity() {
     }

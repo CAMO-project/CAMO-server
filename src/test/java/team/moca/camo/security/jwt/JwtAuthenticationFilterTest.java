@@ -1,7 +1,6 @@
 package team.moca.camo.security.jwt;
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import team.moca.camo.TestUtils;
@@ -11,6 +10,8 @@ import team.moca.camo.security.mock.MockHttpServletRequest;
 import team.moca.camo.security.mock.MockJwtProperties;
 
 import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 @DisplayName("JwtAuthetnicationFilter 테스트")
@@ -28,9 +29,9 @@ public class JwtAuthenticationFilterTest {
 
         // when
         MockHttpServletRequest testRequest = new MockHttpServletRequest(token);
-        jwtAuthenticationFilter.doFilterInternal(testRequest, null, new MockFilterChain());
 
         // then
+        jwtAuthenticationFilter.doFilterInternal(testRequest, null, new MockFilterChain());
     }
 
     @DisplayName("만료된 JWT의 경우 필터에서 예외가 발생한다.")
@@ -45,7 +46,7 @@ public class JwtAuthenticationFilterTest {
         MockHttpServletRequest testRequest = new MockHttpServletRequest(token);
 
         // then
-        Assertions.assertThatThrownBy(() ->
+        assertThatThrownBy(() ->
                 jwtAuthenticationFilter.doFilterInternal(testRequest, null, new MockFilterChain()));
     }
 
@@ -61,7 +62,7 @@ public class JwtAuthenticationFilterTest {
         MockHttpServletRequest testRequest = new MockHttpServletRequest(token);
 
         // then
-        Assertions.assertThatThrownBy(() ->
+        assertThatThrownBy(() ->
                 jwtAuthenticationFilter.doFilterInternal(testRequest, null, new MockFilterChain()));
     }
 }

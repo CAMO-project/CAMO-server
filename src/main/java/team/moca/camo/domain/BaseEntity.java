@@ -21,7 +21,7 @@ import java.util.UUID;
 public class BaseEntity implements Serializable {
 
     @Id
-    @Column(updatable = false, unique = true, nullable = false)
+    @Column(name = "id", updatable = false, unique = true, nullable = false, length = 50)
     private String id;
 
     @CreatedDate

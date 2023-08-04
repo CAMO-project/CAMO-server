@@ -54,4 +54,10 @@ public class CafeService {
                 cafeDTO.getCafeUpdatedAt());
         cafeRepository.save(updatecafe);
     }
+
+    public void deleteCafe(Integer id) {
+        Cafe cafe = cafeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카페 id = " + id));
+
+        cafeRepository.deleteById(cafe.getCafeId());
+    }
 }

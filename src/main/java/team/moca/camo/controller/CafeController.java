@@ -33,4 +33,9 @@ public class CafeController {
     public void updateCafe(@PathVariable("id") Integer id, @RequestBody CafeDTO cafeDTO) {
         cafeService.updateCafe(id, cafeDTO);
     }
+
+    @DeleteMapping("/api/cafe/delete/{id}")
+    public void deleteCafe(@PathVariable("id") Integer id) {
+        cafeService.deleteCafe(id);
+    }
 }

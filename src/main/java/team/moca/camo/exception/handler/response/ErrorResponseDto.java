@@ -31,4 +31,13 @@ public class ErrorResponseDto {
                 .timeStamp(LocalDateTime.now())
                 .build();
     }
+
+    public static ErrorResponseDto of(String errorCode, String message, HttpServletRequest request) {
+        return ErrorResponseDto.builder()
+                .errorCode(errorCode)
+                .message(message)
+                .uri(request.getRequestURI())
+                .timeStamp(LocalDateTime.now())
+                .build();
+    }
 }

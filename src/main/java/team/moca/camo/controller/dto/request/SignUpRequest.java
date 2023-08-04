@@ -25,7 +25,7 @@ public class SignUpRequest {
     @Size(min = 6, max = 20, message = "비밀번호는 6자 이상, 20자 이하이어야 합니다.")
     @Pattern(
             regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&*~]+$",
-            message = "비밀번호는 영어 대소문자, 숫자, 특수문자(!@#$%^&*~)만 가능합니다."
+            message = "비밀번호는 영어 대소문자, 숫자, 특수문자(!@#$%^&*~)만 가능하며 영어, 숫자는 필수 포함입니다."
     )
     private String password;
 

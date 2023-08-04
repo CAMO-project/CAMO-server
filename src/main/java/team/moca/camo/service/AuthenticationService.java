@@ -53,7 +53,7 @@ public class AuthenticationService {
         if (jwtUtils.isValidToken(refreshToken)) {
             return;
         }
-        throw new BusinessException(AuthenticationError.INVALID_TOKEN_ERROR);
+        throw new BusinessException(AuthenticationError.INVALID_TOKEN);
     }
 
     public void sendVerificationCodeMessage(final String phone) {

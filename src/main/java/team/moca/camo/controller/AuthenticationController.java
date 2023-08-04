@@ -20,7 +20,7 @@ import team.moca.camo.service.AuthenticationService;
 import javax.validation.Valid;
 
 @Slf4j
-@RequestMapping("/api/auth")
+@RequestMapping("/api/authentication")
 @RestController
 public class AuthenticationController {
 
@@ -36,14 +36,14 @@ public class AuthenticationController {
         return ResponseDto.of(new TokenResponse(accessToken), "A new access token has been issued.");
     }
 
-    @GetMapping("/phone/verification")
+    @GetMapping("/phone")
     public ResponseDto<Object> requestPhoneVerificationCode(@Valid @ModelAttribute PhoneVerifyRequest phoneVerifyRequest) {
         log.info("phoneNumber = {}", phoneVerifyRequest.getPhoneNumber());
         authenticationService.sendVerificationCodeMessage(phoneVerifyRequest.getPhoneNumber());
         return ResponseDto.of("Phone verification code has been sent.");
     }
 
-    @PostMapping("/email/duplication")
+    @PostMapping("/email")
     public ResponseDto<EmailDuplicateResponse> checkEmailDuplicate(
             @Valid @RequestBody EmailDuplicateRequest emailDuplicateRequest
     ) {

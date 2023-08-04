@@ -52,7 +52,34 @@ public class Cafe {
 
     }
 
-    public Cafe(String cafeName,
+    //PUT용 생성자
+    public Cafe(Integer cafeId,
+                String cafeName,
+                String cafeContact,
+                String cafeIntroduction,
+                String cafeReward,
+                String cafeRequiredStamps,
+                String cafeCity,
+                String cafeTown,
+                String cafeAddressDetail,
+                String cafeCreatedAt,
+                String cafeUpdatedAt) {
+        this.cafeId = cafeId;
+        this.cafeName = cafeName;
+        this.cafeContact = cafeContact;
+        this.cafeIntroduction = cafeIntroduction;
+        this.cafeReward = cafeReward;
+        this.cafeRequiredStamps = cafeRequiredStamps;
+        this.cafeCity = cafeCity;
+        this.cafeTown = cafeTown;
+        this.cafeAddressDetail = cafeAddressDetail;
+        this.cafeCreatedAt = cafeCreatedAt;
+        this.cafeUpdatedAt = cafeUpdatedAt;
+    }
+
+    //POST용 생성자
+    public Cafe(
+                String cafeName,
                 String cafeContact,
                 String cafeIntroduction,
                 String cafeReward,
@@ -73,4 +100,6 @@ public class Cafe {
         this.cafeCreatedAt = cafeCreatedAt;
         this.cafeUpdatedAt = cafeUpdatedAt;
     }
+
+
 }

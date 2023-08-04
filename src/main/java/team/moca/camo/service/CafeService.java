@@ -14,7 +14,7 @@ public class CafeService {
     private CafeRepository cafeRepository;
 
     public void registerCafe(CafeDTO cafeDTO) {
-        cafeRepository.save(new Cafe(
+        Cafe cafe = new Cafe(
                 cafeDTO.getCafeName(),
                 cafeDTO.getCafeContact(),
                 cafeDTO.getCafeIntroduction(),
@@ -24,8 +24,9 @@ public class CafeService {
                 cafeDTO.getCafeTown(),
                 cafeDTO.getCafeAddressDetail(),
                 cafeDTO.getCafeCreatedAt(),
-                cafeDTO.getCafeUpdatedAt())
-        );
+                cafeDTO.getCafeUpdatedAt());
+
+        cafeRepository.save(cafe);
     }
 
     public Cafe searchId(Integer id) {
@@ -34,5 +35,23 @@ public class CafeService {
 
     public List<Cafe> searchCafeList() {
         return cafeRepository.findAll();
+    }
+
+    public void updateCafe(Integer id, CafeDTO cafeDTO) {
+        Cafe cafe = cafeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id= " + id));
+
+        Cafe updatecafe = new Cafe(
+                cafe.getCafeId(),
+                cafeDTO.getCafeName(),
+                cafeDTO.getCafeContact(),
+                cafeDTO.getCafeIntroduction(),
+                cafeDTO.getCafeReward(),
+                cafeDTO.getCafeRequiredStamps(),
+                cafeDTO.getCafeCity(),
+                cafeDTO.getCafeTown(),
+                cafeDTO.getCafeAddressDetail(),
+                cafeDTO.getCafeCreatedAt(),
+                cafeDTO.getCafeUpdatedAt());
+        cafeRepository.save(updatecafe);
     }
 }

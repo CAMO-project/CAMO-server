@@ -28,4 +28,9 @@ public class CafeController {
     public List<Cafe> searchCafeList() {
         return cafeService.searchCafeList();
     }
+
+    @PutMapping("/api/cafe/update/{id}")
+    public void updateCafe(@PathVariable("id") Integer id, @RequestBody CafeDTO cafeDTO) {
+        cafeService.updateCafe(id, cafeDTO);
+    }
 }

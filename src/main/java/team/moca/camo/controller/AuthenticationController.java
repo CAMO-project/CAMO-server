@@ -56,6 +56,6 @@ public class AuthenticationController {
         String accountId = authenticationService.createNewEmailAccount(signUpRequest);
         log.info("Sign-up [{}]", accountId);
         SignUpResponse signUpResponse = new SignUpResponse(true, false);
-        return ResponseDto.of(signUpResponse, "이메일로 가입하기");
+        return ResponseDto.of(signUpResponse, "A new email account has been created.");
     }
 }

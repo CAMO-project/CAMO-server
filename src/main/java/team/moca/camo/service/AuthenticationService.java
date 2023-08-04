@@ -75,6 +75,7 @@ public class AuthenticationService {
         return email;
     }
 
+    @Transactional
     public String createNewEmailAccount(final SignUpRequest signUpRequest) {
         checkEmailDuplicate(signUpRequest.getEmail());
         checkPhoneDuplicate(signUpRequest.getPhone());

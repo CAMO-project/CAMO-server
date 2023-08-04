@@ -12,6 +12,7 @@ public class BusinessException extends RuntimeException {
     private final HttpStatus httpStatus;
 
     public BusinessException(CamoError camoError) {
+        super(camoError.getMessage());
         this.errorCode = camoError.getErrorCode();
         this.message = camoError.getMessage();
         this.httpStatus = camoError.getHttpStatus();

@@ -1,8 +1,11 @@
 package team.moca.camo.service;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import team.moca.camo.common.ThreadSafeDistinctMemory;
+import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.domain.User;
 import team.moca.camo.exception.CamoException;
 import team.moca.camo.exception.error.AuthenticationError;
@@ -16,6 +19,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Transactional(readOnly = true)
 @Service
 public class AuthenticationService {
 
@@ -28,14 +32,16 @@ public class AuthenticationService {
     private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
     private final SmsService smsService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthenticationService(JwtUtils jwtUtils, UserRepository userRepository, SmsService smsService) {
+    public AuthenticationService(JwtUtils jwtUtils, UserRepository userRepository, SmsService smsService, PasswordEncoder passwordEncoder) {
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
         this.smsService = smsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public String getNewAccessToken(String refreshToken) {
+    public String getNewAccessToken(final String refreshToken) {
         refreshTokenValidation(refreshToken);
 
         Authentication authentication = jwtUtils.getAuthentication(refreshToken);
@@ -43,14 +49,14 @@ public class AuthenticationService {
         return jwtUtils.generateToken(authenticatedUser, ACCESS_TOKEN_VALIDITY_PERIOD);
     }
 
-    private void refreshTokenValidation(String refreshToken) {
+    private void refreshTokenValidation(final String refreshToken) {
         if (jwtUtils.isValidToken(refreshToken)) {
             return;
         }
         throw new CamoException(AuthenticationError.INVALID_TOKEN_ERROR);
     }
 
-    public void sendVerificationCodeMessage(String phone) {
+    public void sendVerificationCodeMessage(final String phone) {
         int verificationCode = new Random().nextInt(1000000);
 
         StringBuilder contents = new StringBuilder();
@@ -60,15 +66,45 @@ public class AuthenticationService {
         phoneVerificationCodeMemory.put(phone, verificationCode);
     }
 
-    public String checkEmailDuplicate(String email) {
+    public String validateEmail(final String email) {
+        checkEmailDuplicate(email);
+
+        if (threadSafeDistinctMemory.contains(email)) {
+            throw new CamoException(AuthenticationError.EMAIL_DUPLICATION);
+        }
+        return email;
+    }
+
+    public String createNewEmailAccount(final SignUpRequest signUpRequest) {
+        checkEmailDuplicate(signUpRequest.getEmail());
+        checkPhoneDuplicate(signUpRequest.getPhone());
+        String encodedPassword =
+                checkPasswordAndEncode(signUpRequest.getPassword(), signUpRequest.getPasswordCheck());
+
+        User signUpUser = User.signUp(signUpRequest, encodedPassword);
+        User savedUser = userRepository.save(signUpUser);
+        return savedUser.getId();
+    }
+
+    private void checkEmailDuplicate(final String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
-            throw new CamoException(AuthenticationError.EMAIL_DUPLICATE);
+            throw new CamoException(AuthenticationError.EMAIL_DUPLICATION);
         }
-        if (threadSafeDistinctMemory.contains(email)) {
-            throw new CamoException(AuthenticationError.EMAIL_DUPLICATE);
+    }
+
+    private void checkPhoneDuplicate(final String phone) {
+        Optional<User> optionalUser = userRepository.findByPhone(phone);
+        if (optionalUser.isPresent()) {
+            throw new CamoException(AuthenticationError.PHONE_DUPLICATION);
+        }
+    }
+
+    private String checkPasswordAndEncode(String password, String passwordCheck) {
+        if (!password.equals(passwordCheck)) {
+            throw new CamoException(AuthenticationError.PASSWORD_CHECK_MISMATCH);
         }
 
-        return email;
+        return passwordEncoder.encode(password);
     }
 }

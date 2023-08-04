@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.domain.value.Domain;
 import team.moca.camo.domain.value.UserType;
 
@@ -57,16 +58,27 @@ public class User extends BaseEntity implements UserDetails {
 
     protected User() {
         super(Domain.USER);
+        withdrawn = false;
+        userType = UserType.CUSTOMER;
     }
 
     @Builder
     protected User(String email, String password, String phone, String nickname, String kakaoId) {
-        super(Domain.USER);
+        this();
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.nickname = nickname;
         this.kakaoId = kakaoId;
+    }
+
+    public static User signUp(SignUpRequest signUpRequest, String encodedPassword) {
+        return User.builder()
+                .email(signUpRequest.getEmail())
+                .password(encodedPassword)
+                .phone(signUpRequest.getPhone())
+                .nickname(signUpRequest.getNickname())
+                .build();
     }
 
     @Override

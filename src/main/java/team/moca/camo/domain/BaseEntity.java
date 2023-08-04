@@ -36,7 +36,8 @@ public class BaseEntity implements Serializable {
     }
 
     protected BaseEntity(Domain domain) {
-        id = domain.toString().toLowerCase() + "_" + UUID.randomUUID();
+        id = domain.toString().toLowerCase() + "_" +
+                UUID.randomUUID().toString().replace("-", "");
     }
 
     @Override

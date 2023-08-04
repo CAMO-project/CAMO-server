@@ -1,5 +1,6 @@
 package team.moca.camo.controller.dto.request;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
@@ -36,4 +37,16 @@ public class SignUpRequest {
     @Size(min = 8, max = 15, message = "전화번호는 7자 이상, 15자 이하이어야 합니다.")
     @Pattern(regexp = "^[0-9]+$", message = "전화번호는 숫자만 가능합니다.")
     private String phone;
+
+    protected SignUpRequest() {
+    }
+
+    @Builder
+    protected SignUpRequest(String email, String nickname, String password, String passwordCheck, String phone) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.passwordCheck = passwordCheck;
+        this.phone = phone;
+    }
 }

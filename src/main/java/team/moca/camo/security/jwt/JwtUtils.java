@@ -28,10 +28,10 @@ public class JwtUtils implements Serializable {
 
     public String generateToken(User user, Duration validityDuration) {
         Date now = new Date();
-        return makeToken(new Date(now.getTime() + validityDuration.toMillis()), user);
+        return createToken(new Date(now.getTime() + validityDuration.toMillis()), user);
     }
 
-    private String makeToken(Date expiration, User user) {
+    private String createToken(Date expiration, User user) {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuer(jwtProperties.getIssuer())

@@ -21,7 +21,7 @@ class JwtUtilsTest {
     @Test
     void generateJWT() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         log.info("testUser.id = {}", testUser.getId());
 
         // when
@@ -37,7 +37,7 @@ class JwtUtilsTest {
     @Test
     void normalJWTSuccessValidation() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
 
         // when
@@ -51,7 +51,7 @@ class JwtUtilsTest {
     @Test
     void expiredJWTFailValidation() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMillis(10));
         Thread.sleep(100);
 
@@ -66,7 +66,7 @@ class JwtUtilsTest {
     @Test
     void modifiedJWTFailValidation() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
         token += "m";
 

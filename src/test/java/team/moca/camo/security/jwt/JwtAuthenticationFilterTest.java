@@ -8,6 +8,7 @@ import team.moca.camo.domain.User;
 import team.moca.camo.security.mock.MockFilterChain;
 import team.moca.camo.security.mock.MockHttpServletRequest;
 import team.moca.camo.security.mock.MockJwtProperties;
+import team.moca.camo.security.mock.MockUserDetailsService;
 
 import java.time.Duration;
 
@@ -17,14 +18,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @DisplayName("JwtAuthetnicationFilter 테스트")
 public class JwtAuthenticationFilterTest {
 
-    private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties(), null);
+    private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties(), new MockUserDetailsService());
     private final JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
 
     @DisplayName("유효한 JWT의 경우 필터를 통과한다.")
     @Test
     void passFilterValidJWT() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
 
         // when
@@ -38,7 +39,7 @@ public class JwtAuthenticationFilterTest {
     @Test
     void filterThrowsExceptionExpiredJWT() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMillis(10));
         Thread.sleep(100);
 
@@ -54,7 +55,7 @@ public class JwtAuthenticationFilterTest {
     @Test
     void filterThrowsExceptionModifiedJWT() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
         token += "m";
 

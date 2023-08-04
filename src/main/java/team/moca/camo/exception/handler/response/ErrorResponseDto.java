@@ -2,7 +2,7 @@ package team.moca.camo.exception.handler.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import team.moca.camo.exception.CamoException;
+import team.moca.camo.exception.BusinessException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class ErrorResponseDto {
         this.timeStamp = timeStamp;
     }
 
-    public static ErrorResponseDto of(CamoException exception, HttpServletRequest request) {
+    public static ErrorResponseDto of(BusinessException exception, HttpServletRequest request) {
         return ErrorResponseDto.builder()
                 .errorCode(exception.getErrorCode())
                 .message(exception.getMessage())

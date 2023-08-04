@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import team.moca.camo.common.ThreadSafeDistinctMemory;
 import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.domain.User;
-import team.moca.camo.exception.CamoException;
+import team.moca.camo.exception.BusinessException;
 import team.moca.camo.exception.error.AuthenticationError;
 import team.moca.camo.repository.UserRepository;
 import team.moca.camo.security.jwt.JwtUtils;
@@ -53,7 +53,7 @@ public class AuthenticationService {
         if (jwtUtils.isValidToken(refreshToken)) {
             return;
         }
-        throw new CamoException(AuthenticationError.INVALID_TOKEN_ERROR);
+        throw new BusinessException(AuthenticationError.INVALID_TOKEN_ERROR);
     }
 
     public void sendVerificationCodeMessage(final String phone) {
@@ -70,7 +70,7 @@ public class AuthenticationService {
         checkEmailDuplicate(email);
 
         if (threadSafeDistinctMemory.contains(email)) {
-            throw new CamoException(AuthenticationError.EMAIL_DUPLICATION);
+            throw new BusinessException(AuthenticationError.EMAIL_DUPLICATION);
         }
         return email;
     }
@@ -78,6 +78,7 @@ public class AuthenticationService {
     public String createNewEmailAccount(final SignUpRequest signUpRequest) {
         checkEmailDuplicate(signUpRequest.getEmail());
         checkPhoneDuplicate(signUpRequest.getPhone());
+        checkNicknameDuplicate(signUpRequest.getNickname());
         String encodedPassword =
                 checkPasswordAndEncode(signUpRequest.getPassword(), signUpRequest.getPasswordCheck());
 
@@ -89,20 +90,27 @@ public class AuthenticationService {
     private void checkEmailDuplicate(final String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
-            throw new CamoException(AuthenticationError.EMAIL_DUPLICATION);
+            throw new BusinessException(AuthenticationError.EMAIL_DUPLICATION);
         }
     }
 
     private void checkPhoneDuplicate(final String phone) {
         Optional<User> optionalUser = userRepository.findByPhone(phone);
         if (optionalUser.isPresent()) {
-            throw new CamoException(AuthenticationError.PHONE_DUPLICATION);
+            throw new BusinessException(AuthenticationError.PHONE_DUPLICATION);
         }
     }
 
-    private String checkPasswordAndEncode(String password, String passwordCheck) {
+    private void checkNicknameDuplicate(final String nickname) {
+        Optional<User> optionalUser = userRepository.findByNickname(nickname);
+        if (optionalUser.isPresent()) {
+            throw new BusinessException(AuthenticationError.NICKNAME_DUPLICATION);
+        }
+    }
+
+    private String checkPasswordAndEncode(final String password, final String passwordCheck) {
         if (!password.equals(passwordCheck)) {
-            throw new CamoException(AuthenticationError.PASSWORD_CHECK_MISMATCH);
+            throw new BusinessException(AuthenticationError.PASSWORD_CHECK_MISMATCH);
         }
 
         return passwordEncoder.encode(password);

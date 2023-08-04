@@ -4,7 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import team.moca.camo.exception.CamoException;
+import team.moca.camo.exception.BusinessException;
 import team.moca.camo.exception.error.AuthenticationError;
 import team.moca.camo.repository.UserRepository;
 
@@ -20,6 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> new CamoException(AuthenticationError.USER_AUTHENTICATION_FAIL));
+                .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
     }
 }

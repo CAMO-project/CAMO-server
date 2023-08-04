@@ -1,4 +1,4 @@
-package team.moca.camo.controller.response;
+package team.moca.camo.controller.dto;
 
 import lombok.Getter;
 

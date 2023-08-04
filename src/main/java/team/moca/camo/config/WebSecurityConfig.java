@@ -29,7 +29,6 @@ public class WebSecurityConfig {
                 .logout().disable()
                 .authorizeHttpRequests(
                         authorization -> authorization
-                                .requestMatchers().permitAll()
                                 .anyRequest().permitAll()
                 )
                 .sessionManagement(

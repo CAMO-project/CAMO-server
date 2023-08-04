@@ -6,6 +6,8 @@ import team.moca.camo.DTO.CafeDTO;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.repository.CafeRepository;
 
+import java.util.List;
+
 @Service
 public class CafeService {
     @Autowired
@@ -24,5 +26,13 @@ public class CafeService {
                 cafeDTO.getCafeCreatedAt(),
                 cafeDTO.getCafeUpdatedAt())
         );
+    }
+
+    public Cafe searchId(Integer id) {
+        return cafeRepository.findById(id).get();
+    }
+
+    public List<Cafe> searchCafeList() {
+        return cafeRepository.findAll();
     }
 }

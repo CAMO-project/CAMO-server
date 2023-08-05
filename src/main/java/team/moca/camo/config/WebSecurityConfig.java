@@ -5,11 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import team.moca.camo.security.JwtAuthenticationFilter;
+import team.moca.camo.security.jwt.JwtAuthenticationFilter;
 
 @EnableWebSecurity
 public class WebSecurityConfig {
@@ -29,7 +31,6 @@ public class WebSecurityConfig {
                 .logout().disable()
                 .authorizeHttpRequests(
                         authorization -> authorization
-                                .requestMatchers().permitAll()
                                 .anyRequest().permitAll()
                 )
                 .sessionManagement(
@@ -48,5 +49,10 @@ public class WebSecurityConfig {
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

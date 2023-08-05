@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import team.moca.camo.domain.value.Domain;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -20,7 +21,7 @@ import java.util.UUID;
 public class BaseEntity implements Serializable {
 
     @Id
-    @Column(updatable = false, unique = true, nullable = false)
+    @Column(name = "id", updatable = false, unique = true, nullable = false, length = 50)
     private String id;
 
     @CreatedDate
@@ -35,7 +36,8 @@ public class BaseEntity implements Serializable {
     }
 
     protected BaseEntity(Domain domain) {
-        id = domain.toString().toLowerCase() + "_" + UUID.randomUUID();
+        id = domain.toString().toLowerCase() + "_" +
+                UUID.randomUUID().toString().replace("-", "");
     }
 
     @Override

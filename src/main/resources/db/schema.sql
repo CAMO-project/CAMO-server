@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS User
 (
-    id         VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
-    email      VARCHAR(50) NOT NULL UNIQUE,
-    password   VARCHAR(50) NOT NULL,
-    phone      VARCHAR(15) NOT NULL UNIQUE,
+    id         VARCHAR(50)  NOT NULL UNIQUE PRIMARY KEY,
+    email      VARCHAR(50)  NOT NULL UNIQUE,
+    password   VARCHAR(255) NOT NULL,
+    phone      VARCHAR(15)  NOT NULL UNIQUE,
     nickname   VARCHAR(10),
     kakao_id   VARCHAR(50),
     withdrawn  BOOLEAN DEFAULT FALSE,
-    user_type  VARCHAR(15) NOT NULL,
+    user_type  VARCHAR(15)  NOT NULL,
     created_at DATETIME(6),
     updated_at DATETIME(6)
 ) ENGINE = InnoDB;

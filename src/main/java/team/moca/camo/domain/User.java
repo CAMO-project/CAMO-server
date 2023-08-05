@@ -5,11 +5,16 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import team.moca.camo.controller.dto.request.SignUpRequest;
+import team.moca.camo.domain.value.Domain;
+import team.moca.camo.domain.value.UserType;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
@@ -24,23 +29,27 @@ import static java.util.stream.Collectors.toList;
 @Entity
 public class User extends BaseEntity implements UserDetails {
 
-    @Column(name = "email", unique = true, nullable = true)
+    @Column(name = "email", unique = true, nullable = false, updatable = false, length = 50)
     private String email;
 
-    @Column(name = "password", nullable = true)
+    @Column(name = "password", nullable = false, length = 50)
     private String password;
 
-    @Column(name = "phone", nullable = false, unique = true)
+    @Column(name = "phone", nullable = false, unique = true, length = 15)
     private String phone;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", length = 10)
     private String nickname;
 
-    @Column(name = "kakao_id")
+    @Column(name = "kakao_id", length = 50)
     private String kakaoId;
 
     @Column(name = "withdrawn")
     private boolean withdrawn;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "user_type", length = 15)
+    private UserType userType;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Role", joinColumns = @JoinColumn(name = "user_id"))
@@ -49,16 +58,27 @@ public class User extends BaseEntity implements UserDetails {
 
     protected User() {
         super(Domain.USER);
+        withdrawn = false;
+        userType = UserType.CUSTOMER;
     }
 
     @Builder
     protected User(String email, String password, String phone, String nickname, String kakaoId) {
-        super(Domain.USER);
+        this();
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.nickname = nickname;
         this.kakaoId = kakaoId;
+    }
+
+    public static User signUp(SignUpRequest signUpRequest, String encodedPassword) {
+        return User.builder()
+                .email(signUpRequest.getEmail())
+                .password(encodedPassword)
+                .phone(signUpRequest.getPhone())
+                .nickname(signUpRequest.getNickname())
+                .build();
     }
 
     @Override

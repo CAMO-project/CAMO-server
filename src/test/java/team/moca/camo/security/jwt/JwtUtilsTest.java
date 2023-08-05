@@ -1,4 +1,4 @@
-package team.moca.camo.security;
+package team.moca.camo.security.jwt;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -15,13 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("JWT 테스트")
 class JwtUtilsTest {
 
-    private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties());
+    private final JwtUtils jwtUtils = new JwtUtils(new MockJwtProperties(), null);
 
     @DisplayName("JWT를 생성할 수 있다.")
     @Test
     void generateJWT() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         log.info("testUser.id = {}", testUser.getId());
 
         // when
@@ -37,7 +37,7 @@ class JwtUtilsTest {
     @Test
     void normalJWTSuccessValidation() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
 
         // when
@@ -51,7 +51,7 @@ class JwtUtilsTest {
     @Test
     void expiredJWTFailValidation() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMillis(10));
         Thread.sleep(100);
 
@@ -66,7 +66,7 @@ class JwtUtilsTest {
     @Test
     void modifiedJWTFailValidation() throws Exception {
         // given
-        User testUser = TestUtils.createTestUser();
+        User testUser = TestUtils.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
         token += "m";
 

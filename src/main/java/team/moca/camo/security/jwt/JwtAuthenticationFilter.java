@@ -1,4 +1,4 @@
-package team.moca.camo.security;
+package team.moca.camo.security.jwt;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +28,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String requestTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.isEmpty(requestTokenHeader)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         validateRequestTokenHeader(requestTokenHeader);
 
         String requestToken = requestTokenHeader.substring(TOKEN_PREFIX.length());

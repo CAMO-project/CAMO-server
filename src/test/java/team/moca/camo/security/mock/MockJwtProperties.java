@@ -1,7 +1,7 @@
 package team.moca.camo.security.mock;
 
 import lombok.Getter;
-import team.moca.camo.security.JwtProperties;
+import team.moca.camo.security.jwt.JwtProperties;
 
 import java.util.Base64;
 

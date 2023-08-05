@@ -31,6 +31,8 @@ CREATE TABLE IF NOT EXISTS Cafe
     city              VARCHAR(10)   NOT NULL,
     town              VARCHAR(10)   NOT NULL,
     address_detail    VARCHAR(100)  NOT NULL,
+    latitude          VARCHAR(15),
+    longitude         VARCHAR(15),
     created_at        DATETIME(6),
     updated_at        DATETIME(6)
 ) ENGINE = InnoDB;

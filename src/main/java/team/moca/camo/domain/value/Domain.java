@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public enum Domain {
 
-    USER
+    USER, CAFE
 }

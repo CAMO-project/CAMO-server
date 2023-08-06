@@ -1,5 +1,6 @@
 package team.moca.camo.domain.value;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.Column;
@@ -15,10 +16,11 @@ public class Coordinate {
     @Column(name = "longitude", length = 15)
     private String longitude;
 
-    public Coordinate() {
+    protected Coordinate() {
     }
 
-    public Coordinate(String latitude, String longitude) {
+    @Builder
+    protected Coordinate(String latitude, String longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

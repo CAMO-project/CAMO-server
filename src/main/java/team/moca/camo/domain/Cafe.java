@@ -39,6 +39,12 @@ public class Cafe extends BaseEntity {
     @Embedded
     private Location location;
 
+    @Column(name = "rating_average", nullable = false)
+    private double ratingAverage;
+
+    @Column(name = "likes_count", nullable = false)
+    private int likesCount;
+
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;

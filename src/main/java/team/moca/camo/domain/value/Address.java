@@ -1,5 +1,6 @@
 package team.moca.camo.domain.value;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.Column;
@@ -23,4 +24,16 @@ public class Address {
 
     @Column(name = "road_address", nullable = false, length = 120)
     private String roadAddress;
+
+    protected Address() {
+    }
+
+    @Builder
+    protected Address(String city, String town, String street, String addressDetail, String roadAddress) {
+        this.city = city;
+        this.town = town;
+        this.street = street;
+        this.addressDetail = addressDetail;
+        this.roadAddress = roadAddress;
+    }
 }

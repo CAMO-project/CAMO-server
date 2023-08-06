@@ -22,8 +22,11 @@ public class Menu extends BaseEntity {
     @Column(name = "menu_price", nullable = false)
     private int price;
 
-    @Column(name = "menu_image_url")
+    @Column(name = "menu_image_url", length = 200)
     private String imageUrl;
+
+    @Column(name = "favorites_count", nullable = false)
+    private int favoritesCount;
 
     @JoinColumn(name = "cafe_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)

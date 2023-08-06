@@ -58,6 +58,9 @@ public class Cafe extends BaseEntity {
     @OneToMany(mappedBy = "cafe")
     private List<Favorite> favorites = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cafe")
+    private List<Event> events = new ArrayList<>();
+
     protected Cafe() {
         super(Domain.CAFE);
     }

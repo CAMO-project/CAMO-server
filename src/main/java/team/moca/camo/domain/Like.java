@@ -22,7 +22,7 @@ public class Like extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @JoinColumn(name = "menu_id", nullable = false)
+    @JoinColumn(name = "menu_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Menu menu;
 

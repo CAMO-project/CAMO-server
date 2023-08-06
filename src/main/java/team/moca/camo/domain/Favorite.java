@@ -22,7 +22,7 @@ public class Favorite extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @JoinColumn(name = "cafe_id", nullable = false)
+    @JoinColumn(name = "cafe_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Cafe cafe;
 

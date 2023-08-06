@@ -11,7 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Table(name = "Cafe")
@@ -39,6 +42,9 @@ public class Cafe extends BaseEntity {
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
+
+    @OneToMany(mappedBy = "cafe")
+    private List<Menu> menus = new ArrayList<>();
 
     protected Cafe() {
         super(Domain.CAFE);

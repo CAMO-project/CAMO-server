@@ -9,7 +9,7 @@ public class CafeDTO {
     private String contact;
     private String introduction;
     private String reward;
-    private String requiredStamps;
+    private Integer requiredStamps;
     private String city;
     private String town;
     private String addressDetail;

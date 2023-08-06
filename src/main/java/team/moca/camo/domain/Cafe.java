@@ -23,7 +23,7 @@ public class Cafe extends BaseEntity {
     private String reward;
 
     @Column(name = "required_stamps")
-    private String requiredStamps;
+    private Integer requiredStamps;
 
     @Column(name = "city")
     private String city;
@@ -39,13 +39,23 @@ public class Cafe extends BaseEntity {
     }
 
     @Builder
-    protected Cafe(String name, String city, String town, String addressDetail, String contact, String introduction) {
-        this();
+    protected Cafe(String name, String city, String town, String addressDetail, String contact) {
+        super(Domain.Cafe);
         this.name = name;
         this.city = city;
         this.town = town;
         this.addressDetail = addressDetail;
         this.contact = contact;
+        //사업자 등록 번호 필드는 아직 없
+    }
+
+    public void updateCafe(String city, String town, String addressDetail, Integer requiredStamps, String reward, String introduction) {
+        this.city = city;
+        this.town = town;
+        this.addressDetail = addressDetail;
+        this.requiredStamps = requiredStamps;
+        this.reward = reward;
         this.introduction = introduction;
+        //태그 아직 없음
     }
 }

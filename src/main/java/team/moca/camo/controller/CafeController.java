@@ -11,8 +11,11 @@ import java.util.List;
 @RestController
 public class CafeController {
 
-    @Autowired
-    private CafeService cafeService;
+    private final CafeService cafeService;
+
+    public CafeController(CafeService cafeService) {
+        this.cafeService = cafeService;
+    }
 
     @PostMapping("/api/cafe/new")
     public void registerCafe(@RequestBody CafeDTO cafeDTO) {
@@ -29,13 +32,13 @@ public class CafeController {
         return cafeService.searchCafeList();
     }
 
-//    @PutMapping("/api/cafe/update/{id}")
-//    public void updateCafe(@PathVariable("id") Integer id, @RequestBody CafeDTO cafeDTO) {
-//        cafeService.updateCafe(id, cafeDTO);
-//    }
+    @PutMapping("/api/cafe/update/{id}")
+    public void updateCafe(@PathVariable("id") String id, @RequestBody CafeDTO cafeDTO) {
+        cafeService.updateCafe(id, cafeDTO);
+    }
 
-//    @DeleteMapping("/api/cafe/delete/{id}")
-//    public void deleteCafe(@PathVariable("id") Integer id) {
-//        cafeService.deleteCafe(id);
-//    }
+    @DeleteMapping("/api/cafe/delete/{id}")
+    public void deleteCafe(@PathVariable("id") String id) {
+        cafeService.deleteCafe(id);
+    }
 }

@@ -1,4 +1,4 @@
-package team.moca.camo.domain.value;
+package team.moca.camo.domain.embedded;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;

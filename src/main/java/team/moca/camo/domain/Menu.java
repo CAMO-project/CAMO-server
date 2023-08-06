@@ -28,8 +28,8 @@ public class Menu extends BaseEntity {
     @Column(name = "image_url", length = 200)
     private String imageUrl;
 
-    @Column(name = "favorites_count", nullable = false)
-    private int favoritesCount;
+    @Column(name = "likes_count", nullable = false)
+    private int likesCount;
 
     @JoinColumn(name = "cafe_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,6 +40,7 @@ public class Menu extends BaseEntity {
 
     protected Menu() {
         super(Domain.MENU);
+        likesCount = 0;
     }
 
     @Builder

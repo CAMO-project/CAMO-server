@@ -2,8 +2,8 @@ package team.moca.camo.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import team.moca.camo.domain.embedded.Location;
 import team.moca.camo.domain.value.Domain;
-import team.moca.camo.domain.value.Location;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -44,8 +44,8 @@ public class Cafe extends BaseEntity {
     @Column(name = "rating_average", nullable = false)
     private double ratingAverage;
 
-    @Column(name = "likes_count", nullable = false)
-    private int likesCount;
+    @Column(name = "favorites_count", nullable = false)
+    private int favoritesCount;
 
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -74,6 +74,8 @@ public class Cafe extends BaseEntity {
 
     protected Cafe() {
         super(Domain.CAFE);
+        ratingAverage = 0;
+        favoritesCount = 0;
     }
 
     @Builder

@@ -1,4 +1,4 @@
-package team.moca.camo.domain.value;
+package team.moca.camo.domain.embedded;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package team.moca.camo.domain;
 
 import lombok.Getter;
-import team.moca.camo.domain.value.UserNotificationId;
+import team.moca.camo.domain.embedded.UserNotificationId;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;

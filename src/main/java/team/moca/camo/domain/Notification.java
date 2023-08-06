@@ -7,6 +7,8 @@ import team.moca.camo.domain.value.NotificationType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 @Getter
@@ -17,6 +19,7 @@ public class Notification extends BaseEntity {
     @Column(name = "notification_contents", nullable = false, length = 100)
     private String contents;
 
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "notification_type", nullable = false, length = 15)
     private NotificationType notificationType;
 

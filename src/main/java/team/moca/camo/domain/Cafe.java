@@ -10,6 +10,8 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -60,6 +62,12 @@ public class Cafe extends BaseEntity {
 
     @OneToMany(mappedBy = "cafe")
     private List<Event> events = new ArrayList<>();
+
+    @JoinTable(name = "Cafe_Tag",
+            joinColumns = @JoinColumn(name = "cafe_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @ManyToMany
+    private List<Cafe> cafes = new ArrayList<>();
 
     protected Cafe() {
         super(Domain.CAFE);

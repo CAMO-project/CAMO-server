@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS User
     kakao_id   VARCHAR(50),
     withdrawn  BOOLEAN DEFAULT FALSE,
     user_type  VARCHAR(15)  NOT NULL,
-    created_at DATETIME(6),
+    created_at DATETIME(6)  NOT NULL,
     updated_at DATETIME(6)
 ) ENGINE = InnoDB;
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS Cafe
     road_address      VARCHAR(120)  NOT NULL,
     latitude          VARCHAR(15),
     longitude         VARCHAR(15),
-    created_at        DATETIME(6),
+    created_at        DATETIME(6)   NOT NULL,
     updated_at        DATETIME(6),
     user_id           VARCHAR(50)   NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS Tag
 (
     id         VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
     tag_name   VARCHAR(10) UNIQUE,
-    created_at DATETIME(6),
+    created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6)
 ) ENGINE = InnoDB;
 
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS Image
 (
     id         VARCHAR(50)  NOT NULL UNIQUE PRIMARY KEY,
     image_url  VARCHAR(200) NOT NULL,
-    created_at DATETIME(6),
+    created_at DATETIME(6)  NOT NULL,
     updated_at DATETIME(6)
 ) ENGINE = InnoDB;
 
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS Menu
     menu_price     INT         NOT NULL,
     menu_image_url VARCHAR(200),
     cafe_id        VARCHAR(50) NOT NULL,
-    created_at     DATETIME(6),
+    created_at     DATETIME(6) NOT NULL,
     updated_at     DATETIME(6),
     FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
@@ -92,11 +92,13 @@ CREATE TABLE IF NOT EXISTS Review
 (
     id              VARCHAR(50)  NOT NULL UNIQUE PRIMARY KEY,
     review_contents VARCHAR(500) NOT NULL,
-    review_date     DATETIME(6)  NOT NULL,
+    star_rating     INT          NOT NULL,
     user_id         VARCHAR(50),
-    created_at      DATETIME(6),
+    cafe_id         VARCHAR(50)  NOT NULL,
+    created_at      DATETIME(6)  NOT NULL,
     updated_at      DATETIME(6),
-    FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE SET NULL,
+    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Coupon
@@ -105,7 +107,7 @@ CREATE TABLE IF NOT EXISTS Coupon
     stamps     INT         NOT NULL,
     user_id    VARCHAR(50) NOT NULL,
     cafe_id    VARCHAR(50),
-    created_at DATETIME(6),
+    created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6),
     FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE,
     FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE SET NULL
@@ -116,10 +118,11 @@ CREATE TABLE IF NOT EXISTS `Like`
     id         VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
     user_id    VARCHAR(50) NOT NULL,
     cafe_id    VARCHAR(50),
-    created_at DATETIME(6),
+    created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6),
     FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE,
-    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE SET NULL
+    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE SET NULL,
+    UNIQUE (user_id, cafe_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Favorite
@@ -127,10 +130,11 @@ CREATE TABLE IF NOT EXISTS Favorite
     id         VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
     user_id    VARCHAR(50) NOT NULL,
     menu_id    VARCHAR(50),
-    created_at DATETIME(6),
+    created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6),
     FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE,
-    FOREIGN KEY (menu_id) REFERENCES Menu (id) ON DELETE SET NULL
+    FOREIGN KEY (menu_id) REFERENCES Menu (id) ON DELETE SET NULL,
+    UNIQUE (user_id, menu_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Notification
@@ -138,7 +142,7 @@ CREATE TABLE IF NOT EXISTS Notification
     id                   VARCHAR(50)  NOT NULL UNIQUE PRIMARY KEY,
     notification_content VARCHAR(100) NOT NULL,
     notification_type    VARCHAR(15)  NOT NULL,
-    created_at           DATETIME(6),
+    created_at           DATETIME(6)  NOT NULL,
     updated_at           DATETIME(6)
 ) ENGINE = InnoDB;
 
@@ -160,7 +164,7 @@ CREATE TABLE IF NOT EXISTS Event
     image_url      VARCHAR(200),
     event_url      VARCHAR(200),
     cafe_id        VARCHAR(50)  NOT NULL,
-    created_at     DATETIME(6),
+    created_at     DATETIME(6)  NOT NULL,
     updated_at     DATETIME(6),
     FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
@@ -173,6 +177,6 @@ CREATE TABLE IF NOT EXISTS User_Log
     `page`          VARCHAR(20)  NOT NULL,
     endpoint        VARCHAR(50)  NOT NULL,
     platform        VARCHAR(15),
-    created_at      DATETIME(6),
+    created_at      DATETIME(6)  NOT NULL,
     updated_at      DATETIME(6)
 ) ENGINE = InnoDB;

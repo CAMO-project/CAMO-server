@@ -35,7 +35,11 @@ public class CafeService {
         return cafeRepository.findById(id).get();
     }
 
-    public List<Cafe> searchCafeList() {
+    public List<Cafe> cafeSearchList(String searchKeyword) {
+        return cafeRepository.findByNameContaining(searchKeyword);
+    }
+
+    public List<Cafe> cafeList() {
         return cafeRepository.findAll();
     }
 

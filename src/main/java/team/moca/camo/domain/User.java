@@ -17,6 +17,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,6 +56,18 @@ public class User extends BaseEntity implements UserDetails {
     @CollectionTable(name = "Role", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role_name")
     private List<String> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "owner")
+    private List<Cafe> cafes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Coupon> coupons = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorites = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserNotification> notifications = new ArrayList<>();
 
     protected User() {
         super(Domain.USER);

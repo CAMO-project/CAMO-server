@@ -174,6 +174,8 @@ CREATE TABLE IF NOT EXISTS User_Log
     `page`          VARCHAR(20)  NOT NULL,
     endpoint        VARCHAR(50)  NOT NULL,
     platform        VARCHAR(15),
+    user_id         VARCHAR(50),
     created_at      DATETIME(6)  NOT NULL,
-    updated_at      DATETIME(6)
+    updated_at      DATETIME(6),
+    FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE SET NULL
 ) ENGINE = InnoDB;

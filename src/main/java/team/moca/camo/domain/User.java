@@ -66,6 +66,9 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Favorite> favorites = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<UserNotification> notifications = new ArrayList<>();
+
     protected User() {
         super(Domain.USER);
         withdrawn = false;

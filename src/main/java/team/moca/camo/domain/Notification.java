@@ -9,7 +9,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Table(name = "Notification")
@@ -22,6 +25,9 @@ public class Notification extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "notification_type", nullable = false, length = 15)
     private NotificationType notificationType;
+
+    @OneToMany(mappedBy = "notification")
+    private List<UserNotification> users = new ArrayList<>();
 
     protected Notification() {
         super(Domain.NOTIFICATION);

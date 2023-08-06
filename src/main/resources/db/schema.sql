@@ -149,7 +149,8 @@ CREATE TABLE IF NOT EXISTS User_Notification
     `read`          BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (user_id, notification_id),
     FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE,
-    FOREIGN KEY (notification_id) REFERENCES Notification (id)
+    FOREIGN KEY (notification_id) REFERENCES Notification (id) ON DELETE CASCADE,
+    CONSTRAINT user_notification_unique UNIQUE (user_id, notification_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Event

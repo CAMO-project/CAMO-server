@@ -4,15 +4,13 @@ import lombok.Data;
 
 @Data
 public class CafeDTO {
-    private Integer cafeId;
-    private String cafeName;
-    private String cafeContact;
-    private String CafeIntroduction;
-    private String cafeReward;
-    private String cafeRequiredStamps;
-    private String cafeCity;
-    private String cafeTown;
-    private String cafeAddressDetail;
-    private String cafeCreatedAt;
-    private String cafeUpdatedAt;
+    private Integer id;
+    private String name;
+    private String contact;
+    private String introduction;
+    private String reward;
+    private String requiredStamps;
+    private String city;
+    private String town;
+    private String addressDetail;
 }

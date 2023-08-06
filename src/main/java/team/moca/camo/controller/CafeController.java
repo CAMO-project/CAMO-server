@@ -29,13 +29,13 @@ public class CafeController {
         return cafeService.searchCafeList();
     }
 
-    @PutMapping("/api/cafe/update/{id}")
-    public void updateCafe(@PathVariable("id") Integer id, @RequestBody CafeDTO cafeDTO) {
-        cafeService.updateCafe(id, cafeDTO);
-    }
+//    @PutMapping("/api/cafe/update/{id}")
+//    public void updateCafe(@PathVariable("id") Integer id, @RequestBody CafeDTO cafeDTO) {
+//        cafeService.updateCafe(id, cafeDTO);
+//    }
 
-    @DeleteMapping("/api/cafe/delete/{id}")
-    public void deleteCafe(@PathVariable("id") Integer id) {
-        cafeService.deleteCafe(id);
-    }
+//    @DeleteMapping("/api/cafe/delete/{id}")
+//    public void deleteCafe(@PathVariable("id") Integer id) {
+//        cafeService.deleteCafe(id);
+//    }
 }

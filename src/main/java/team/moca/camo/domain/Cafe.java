@@ -1,105 +1,51 @@
 package team.moca.camo.domain;
 
+import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Table(name = "cafe")
 @Entity
-public class Cafe {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cafeId;
+public class Cafe extends BaseEntity {
 
-    @Column(name = "cafe_name")
-    private String cafeName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "cafe_contact")
-    private String cafeContact;
+    @Column(name = "contact")
+    private String contact;
 
-    @Column(name = "cafe_introduction")
-    private String cafeIntroduction;
+    @Column(name = "introduction")
+    private String introduction;
 
-    @Column(name = "cafe_reward")
-    private String cafeReward;
+    @Column(name = "reward")
+    private String reward;
 
-    @Column(name = "cafe_required_stamps")
-    private String cafeRequiredStamps;
+    @Column(name = "required_stamps")
+    private String requiredStamps;
 
-    @Column(name = "cafe_city")
-    private String cafeCity;
+    @Column(name = "city")
+    private String city;
 
-    @Column(name = "cafe_town")
-    private String cafeTown;
+    @Column(name = "town")
+    private String town;
 
-    @Column(name = "cafe_address_detail")
-    private String cafeAddressDetail;
+    @Column(name = "address_detail")
+    private String addressDetail;
 
-    @DateTimeFormat
-    @Column(name = "cafe_created_at")
-    private String cafeCreatedAt;
-
-    @DateTimeFormat
-    @Column(name = "cafe_updated_at")
-    private String cafeUpdatedAt;
-
-    public Cafe() {
-
+    protected Cafe() {
+        super(Domain.Cafe);
     }
 
-    //PUT용 생성자
-    public Cafe(Integer cafeId,
-                String cafeName,
-                String cafeContact,
-                String cafeIntroduction,
-                String cafeReward,
-                String cafeRequiredStamps,
-                String cafeCity,
-                String cafeTown,
-                String cafeAddressDetail,
-                String cafeCreatedAt,
-                String cafeUpdatedAt) {
-        this.cafeId = cafeId;
-        this.cafeName = cafeName;
-        this.cafeContact = cafeContact;
-        this.cafeIntroduction = cafeIntroduction;
-        this.cafeReward = cafeReward;
-        this.cafeRequiredStamps = cafeRequiredStamps;
-        this.cafeCity = cafeCity;
-        this.cafeTown = cafeTown;
-        this.cafeAddressDetail = cafeAddressDetail;
-        this.cafeCreatedAt = cafeCreatedAt;
-        this.cafeUpdatedAt = cafeUpdatedAt;
+    @Builder
+    protected Cafe(String name, String city, String town, String addressDetail, String contact, String introduction) {
+        this();
+        this.name = name;
+        this.city = city;
+        this.town = town;
+        this.addressDetail = addressDetail;
+        this.contact = contact;
+        this.introduction = introduction;
     }
-
-    //POST용 생성자
-    public Cafe(
-                String cafeName,
-                String cafeContact,
-                String cafeIntroduction,
-                String cafeReward,
-                String cafeRequiredStamps,
-                String cafeCity,
-                String cafeTown,
-                String cafeAddressDetail,
-                String cafeCreatedAt,
-                String cafeUpdatedAt) {
-        this.cafeName = cafeName;
-        this.cafeContact = cafeContact;
-        this.cafeIntroduction = cafeIntroduction;
-        this.cafeReward = cafeReward;
-        this.cafeRequiredStamps = cafeRequiredStamps;
-        this.cafeCity = cafeCity;
-        this.cafeTown = cafeTown;
-        this.cafeAddressDetail = cafeAddressDetail;
-        this.cafeCreatedAt = cafeCreatedAt;
-        this.cafeUpdatedAt = cafeUpdatedAt;
-    }
-
-
 }

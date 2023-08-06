@@ -58,7 +58,10 @@ public class User extends BaseEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")
-    private List<Cafe> cafes;
+    private List<Cafe> cafes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Coupon> coupons = new ArrayList<>();
 
     protected User() {
         super(Domain.USER);

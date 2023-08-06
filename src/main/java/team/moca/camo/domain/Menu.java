@@ -16,16 +16,16 @@ import javax.persistence.Table;
 @Entity
 public class Menu extends BaseEntity {
 
-    @Column(name = "menu_name")
+    @Column(name = "menu_name", nullable = false, length = 20)
     private String name;
 
-    @Column(name = "menu_price")
+    @Column(name = "menu_price", nullable = false)
     private int price;
 
     @Column(name = "menu_image_url")
     private String imageUrl;
 
-    @JoinColumn(name = "cafe_id")
+    @JoinColumn(name = "cafe_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Cafe cafe;
 

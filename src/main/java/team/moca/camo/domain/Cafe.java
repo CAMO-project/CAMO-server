@@ -39,7 +39,7 @@ public class Cafe extends BaseEntity {
     @Embedded
     private Location location;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
 

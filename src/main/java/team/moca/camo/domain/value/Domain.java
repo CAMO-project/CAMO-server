@@ -5,5 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Domain {
 
-    USER, CAFE, MENU, REVIEW, COUPON, LIKE, FAVORITE, EVENT, NOTIFICATION, TAG
+    USER, CAFE, MENU, REVIEW,
+    COUPON, LIKE, FAVORITE, EVENT,
+    NOTIFICATION, TAG, IMAGE
 }

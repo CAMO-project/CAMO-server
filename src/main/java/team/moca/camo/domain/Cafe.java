@@ -69,6 +69,9 @@ public class Cafe extends BaseEntity {
     @ManyToMany
     private List<Cafe> cafes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cafe")
+    private List<Image> images = new ArrayList<>();
+
     protected Cafe() {
         super(Domain.CAFE);
     }

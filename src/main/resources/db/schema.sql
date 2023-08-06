@@ -65,17 +65,10 @@ CREATE TABLE IF NOT EXISTS Image
 (
     id         VARCHAR(50)  NOT NULL UNIQUE PRIMARY KEY,
     image_url  VARCHAR(200) NOT NULL,
+    cafe_id    VARCHAR(50)  NOT NULL,
     created_at DATETIME(6)  NOT NULL,
-    updated_at DATETIME(6)
-) ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS Cafe_Image
-(
-    cafe_id  VARCHAR(50) NOT NULL,
-    image_id VARCHAR(50) NOT NULL,
-    PRIMARY KEY (cafe_id, image_id),
-    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES Image (id)
+    updated_at DATETIME(6),
+    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Menu

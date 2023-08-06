@@ -5,7 +5,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.moca.camo.api.KakaoApiService;
+import team.moca.camo.controller.dto.request.LoginRequest;
 import team.moca.camo.controller.dto.request.SignUpRequest;
+import team.moca.camo.controller.dto.response.LoginResponse;
 import team.moca.camo.domain.User;
 import team.moca.camo.exception.BusinessException;
 import team.moca.camo.exception.error.AuthenticationError;
@@ -120,5 +122,23 @@ public class AuthenticationService {
 
         String kakaoAccountId = kakaoApiService.getKakaoAccountId(kakaoToken);
         user.integrateKakaoAccount(kakaoAccountId);
+    }
+
+    public LoginResponse loginWithEmailAccount(final LoginRequest loginRequest) {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
+        validatePassword(password, user.getPassword());
+
+        String accessToken = jwtUtils.generateToken(user, ACCESS_TOKEN_VALIDITY_PERIOD);
+        String refreshToken = jwtUtils.generateToken(user, REFRESH_TOKEN_VALIDITY_PERIOD);
+        return new LoginResponse(accessToken, refreshToken);
+    }
+
+    private void validatePassword(final String inputPassword, final String expectedPassword) {
+        if (!passwordEncoder.matches(inputPassword, expectedPassword)) {
+            throw new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL);
+        }
     }
 }

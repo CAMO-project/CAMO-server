@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import team.moca.camo.common.annotation.Authenticate;
 import team.moca.camo.controller.dto.ResponseDto;
 import team.moca.camo.controller.dto.request.EmailDuplicateRequest;
-import team.moca.camo.controller.dto.request.KakaoIntegrateRequest;
+import team.moca.camo.controller.dto.request.KakaoAccountRequest;
+import team.moca.camo.controller.dto.request.LoginRequest;
 import team.moca.camo.controller.dto.request.PhoneVerifyRequest;
 import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.controller.dto.request.TokenRequest;
 import team.moca.camo.controller.dto.response.EmailDuplicateResponse;
 import team.moca.camo.controller.dto.response.KakaoIntegrationResponse;
+import team.moca.camo.controller.dto.response.LoginResponse;
 import team.moca.camo.controller.dto.response.SignUpResponse;
 import team.moca.camo.controller.dto.response.TokenResponse;
 import team.moca.camo.service.AuthenticationService;
@@ -65,11 +67,18 @@ public class AuthenticationController {
     @PostMapping("/kakao")
     public ResponseDto<KakaoIntegrationResponse> integrateKakaoAccount(
             @Authenticate String authenticatedAccountId,
-            @Valid @RequestBody KakaoIntegrateRequest kakaoIntegrateRequest
+            @Valid @RequestBody KakaoAccountRequest kakaoAccountRequest
     ) {
         authenticationService.integrateKakaoAccountWithEmailAccount(authenticatedAccountId,
-                kakaoIntegrateRequest.getKakaoToken());
+                kakaoAccountRequest.getKakaoToken());
         log.info("Kakao account integration [{}]", authenticatedAccountId);
-        return ResponseDto.of(new KakaoIntegrationResponse(true));
+        return ResponseDto.of(new KakaoIntegrationResponse(true), "Kakao account has been integrated.");
+    }
+
+    @PostMapping("/login")
+    public ResponseDto<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = authenticationService.loginWithEmailAccount(loginRequest);
+        log.info("User login [{}]", loginRequest.getEmail());
+        return ResponseDto.of(loginResponse, "You have successfully logged in.");
     }
 }

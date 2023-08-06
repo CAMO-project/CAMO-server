@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS Menu
     id              VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
     menu_name       VARCHAR(20) NOT NULL,
     menu_price      INT         NOT NULL,
-    image_url  VARCHAR(200),
+    image_url       VARCHAR(200),
     favorites_count INT         NOT NULL,
     cafe_id         VARCHAR(50) NOT NULL,
     created_at      DATETIME(6) NOT NULL,
@@ -142,11 +142,11 @@ CREATE TABLE IF NOT EXISTS Favorite
 
 CREATE TABLE IF NOT EXISTS Notification
 (
-    id                   VARCHAR(50)  NOT NULL UNIQUE PRIMARY KEY,
-    notification_content VARCHAR(100) NOT NULL,
-    notification_type    VARCHAR(15)  NOT NULL,
-    created_at           DATETIME(6)  NOT NULL,
-    updated_at           DATETIME(6)
+    id                    VARCHAR(50)  NOT NULL UNIQUE PRIMARY KEY,
+    notification_contents VARCHAR(100) NOT NULL,
+    notification_type     VARCHAR(15)  NOT NULL,
+    created_at            DATETIME(6)  NOT NULL,
+    updated_at            DATETIME(6)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS User_Notification

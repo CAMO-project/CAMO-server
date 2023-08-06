@@ -80,14 +80,14 @@ CREATE TABLE IF NOT EXISTS Cafe_Image
 
 CREATE TABLE IF NOT EXISTS Menu
 (
-    id             VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
-    menu_name      VARCHAR(20) NOT NULL,
-    menu_price     INT         NOT NULL,
-    menu_image_url VARCHAR(200),
+    id              VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
+    menu_name       VARCHAR(20) NOT NULL,
+    menu_price      INT         NOT NULL,
+    menu_image_url  VARCHAR(200),
     favorites_count INT         NOT NULL,
-    cafe_id        VARCHAR(50) NOT NULL,
-    created_at     DATETIME(6) NOT NULL,
-    updated_at     DATETIME(6),
+    cafe_id         VARCHAR(50) NOT NULL,
+    created_at      DATETIME(6) NOT NULL,
+    updated_at      DATETIME(6),
     FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
@@ -120,24 +120,24 @@ CREATE TABLE IF NOT EXISTS `Like`
 (
     id         VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
     user_id    VARCHAR(50) NOT NULL,
-    cafe_id    VARCHAR(50),
+    menu_id    VARCHAR(50),
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6),
     FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE,
-    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE SET NULL,
-    UNIQUE (user_id, cafe_id)
+    FOREIGN KEY (menu_id) REFERENCES Menu (id) ON DELETE SET NULL,
+    CONSTRAINT like_unique UNIQUE (user_id, menu_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Favorite
 (
     id         VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
     user_id    VARCHAR(50) NOT NULL,
-    menu_id    VARCHAR(50),
+    cafe_id    VARCHAR(50),
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6),
     FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE,
-    FOREIGN KEY (menu_id) REFERENCES Menu (id) ON DELETE SET NULL,
-    UNIQUE (user_id, menu_id)
+    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE SET NULL,
+    CONSTRAINT favorite_unique UNIQUE (user_id, cafe_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Notification

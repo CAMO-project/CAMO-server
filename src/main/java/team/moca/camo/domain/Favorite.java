@@ -11,28 +11,28 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Getter
-@Table(name = "Like",
+@Table(name = "Favorite",
         uniqueConstraints = @UniqueConstraint(
-                name = "favorite_unique", columnNames = {"user_id", "menu_id"}
+                name = "favorite_unique", columnNames = {"user_id", "cafe_id"}
         ))
 @Entity
-public class Like extends BaseEntity {
+public class Favorite extends BaseEntity {
 
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @JoinColumn(name = "menu_id", nullable = false)
+    @JoinColumn(name = "cafe_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Menu menu;
+    private Cafe cafe;
 
-    protected Like() {
-        super(Domain.LIKE);
+    protected Favorite() {
+        super(Domain.FAVORITE);
     }
 
-    public Like(User user, Menu menu) {
+    public Favorite(User user, Cafe cafe) {
         this();
         this.user = user;
-        this.menu = menu;
+        this.cafe = cafe;
     }
 }

@@ -64,7 +64,7 @@ public class User extends BaseEntity implements UserDetails {
     private List<Coupon> coupons = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Like> likes = new ArrayList<>();
+    private List<Favorite> favorites = new ArrayList<>();
 
     protected User() {
         super(Domain.USER);

@@ -9,7 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Table(name = "Menu")
@@ -31,6 +34,9 @@ public class Menu extends BaseEntity {
     @JoinColumn(name = "cafe_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Cafe cafe;
+
+    @OneToMany(mappedBy = "menu")
+    private List<Like> likes = new ArrayList<>();
 
     protected Menu() {
         super(Domain.MENU);

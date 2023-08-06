@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import team.moca.camo.domain.Cafe;
 
 @Repository
-public interface CafeRepository extends JpaRepository<Cafe, Integer> {
+public interface CafeRepository extends JpaRepository<Cafe, String> {
 
 }

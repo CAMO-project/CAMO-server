@@ -20,7 +20,7 @@ public class CafeController {
     }
 
     @GetMapping("api/cafe/{id}")
-    public Cafe searchCafeById(@PathVariable("id") Integer id) {
+    public Cafe searchCafeById(@PathVariable("id") String id) {
         return cafeService.searchId(id);
     }
 

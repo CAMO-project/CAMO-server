@@ -27,7 +27,7 @@ public class CafeService {
 
     }
 
-    public Cafe searchId(Integer id) {
+    public Cafe searchId(String id) {
         return cafeRepository.findById(id).get();
     }
 

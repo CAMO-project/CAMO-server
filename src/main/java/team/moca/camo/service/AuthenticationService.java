@@ -4,7 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.moca.camo.common.ThreadSafeDistinctMemory;
+import team.moca.camo.api.KakaoApiService;
 import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.domain.User;
 import team.moca.camo.exception.BusinessException;
@@ -23,8 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class AuthenticationService {
 
-    private static final ThreadSafeDistinctMemory<String> threadSafeDistinctMemory =
-            new ThreadSafeDistinctMemory<>();
     private static final Map<String, Integer> phoneVerificationCodeMemory = new ConcurrentHashMap<>();
     private static final Duration ACCESS_TOKEN_VALIDITY_PERIOD = Duration.ofHours(2);
     private static final Duration REFRESH_TOKEN_VALIDITY_PERIOD = Duration.ofDays(30);
@@ -33,12 +31,14 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final SmsService smsService;
     private final PasswordEncoder passwordEncoder;
+    private final KakaoApiService kakaoApiService;
 
-    public AuthenticationService(JwtUtils jwtUtils, UserRepository userRepository, SmsService smsService, PasswordEncoder passwordEncoder) {
+    public AuthenticationService(JwtUtils jwtUtils, UserRepository userRepository, SmsService smsService, PasswordEncoder passwordEncoder, KakaoApiService kakaoApiService) {
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
         this.smsService = smsService;
         this.passwordEncoder = passwordEncoder;
+        this.kakaoApiService = kakaoApiService;
     }
 
     public String getNewAccessToken(final String refreshToken) {
@@ -68,10 +68,6 @@ public class AuthenticationService {
 
     public String validateEmail(final String email) {
         checkEmailDuplicate(email);
-
-        if (threadSafeDistinctMemory.contains(email)) {
-            throw new BusinessException(AuthenticationError.EMAIL_DUPLICATION);
-        }
         return email;
     }
 
@@ -115,5 +111,14 @@ public class AuthenticationService {
         }
 
         return passwordEncoder.encode(password);
+    }
+
+    @Transactional
+    public void integrateKakaoAccountWithEmailAccount(final String authenticatedAccountId, final String kakaoToken) {
+        User user = userRepository.findById(authenticatedAccountId)
+                .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
+
+        String kakaoAccountId = kakaoApiService.getKakaoAccountId(kakaoToken);
+        user.integrateKakaoAccount(kakaoAccountId);
     }
 }

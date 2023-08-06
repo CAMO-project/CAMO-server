@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import team.moca.camo.common.annotation.Authenticate;
 import team.moca.camo.controller.dto.ResponseDto;
 import team.moca.camo.controller.dto.request.EmailDuplicateRequest;
+import team.moca.camo.controller.dto.request.KakaoIntegrateRequest;
 import team.moca.camo.controller.dto.request.PhoneVerifyRequest;
 import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.controller.dto.request.TokenRequest;
 import team.moca.camo.controller.dto.response.EmailDuplicateResponse;
+import team.moca.camo.controller.dto.response.KakaoIntegrationResponse;
 import team.moca.camo.controller.dto.response.SignUpResponse;
 import team.moca.camo.controller.dto.response.TokenResponse;
 import team.moca.camo.service.AuthenticationService;
@@ -55,7 +58,18 @@ public class AuthenticationController {
     public ResponseDto<SignUpResponse> signUpByEmail(@Valid @RequestBody SignUpRequest signUpRequest) {
         String accountId = authenticationService.createNewEmailAccount(signUpRequest);
         log.info("Sign-up [{}]", accountId);
-        SignUpResponse signUpResponse = new SignUpResponse(true, false);
+        SignUpResponse signUpResponse = new SignUpResponse(accountId);
         return ResponseDto.of(signUpResponse, "A new email account has been created.");
+    }
+
+    @PostMapping("/kakao")
+    public ResponseDto<KakaoIntegrationResponse> integrateKakaoAccount(
+            @Authenticate String authenticatedAccountId,
+            @Valid @RequestBody KakaoIntegrateRequest kakaoIntegrateRequest
+    ) {
+        authenticationService.integrateKakaoAccountWithEmailAccount(authenticatedAccountId,
+                kakaoIntegrateRequest.getKakaoToken());
+        log.info("Kakao account integration [{}]", authenticatedAccountId);
+        return ResponseDto.of(new KakaoIntegrationResponse(true));
     }
 }

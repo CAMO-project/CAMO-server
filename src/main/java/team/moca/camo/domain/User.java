@@ -94,6 +94,10 @@ public class User extends BaseEntity implements UserDetails {
                 .build();
     }
 
+    public void integrateKakaoAccount(String kakaoId) {
+        this.kakaoId = kakaoId;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()

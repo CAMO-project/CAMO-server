@@ -67,4 +67,12 @@ public class JwtUtils implements Serializable {
                 .getBody()
                 .getSubject();
     }
+
+    public String extractAccountIdFromToken(String token) {
+        return String.valueOf(Jwts.parser()
+                .setSigningKey(jwtProperties.getEncodedSecretKey())
+                .parseClaimsJws(token)
+                .getBody()
+                .get("id"));
+    }
 }

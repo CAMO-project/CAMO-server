@@ -2,13 +2,14 @@ package team.moca.camo.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import team.moca.camo.domain.value.Coordinate;
 import team.moca.camo.domain.value.Domain;
+import team.moca.camo.domain.value.Location;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -32,18 +33,10 @@ public class Cafe extends BaseEntity {
     @Column(name = "required_stamps")
     private int requiredStamps;
 
-    @Column(name = "city", nullable = false, length = 10)
-    private String city;
-
-    @Column(name = "town", nullable = false, length = 10)
-    private String town;
-
-    @Column(name = "address_detail", nullable = false, length = 100)
-    private String addressDetail;
-
     @Embedded
-    private Coordinate coordinate;
+    private Location location;
 
+    @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
 
@@ -52,17 +45,14 @@ public class Cafe extends BaseEntity {
     }
 
     @Builder
-    protected Cafe(Domain domain, String name, String contact, String introduction, String reward, int requiredStamps,
-                   String city, String town, String addressDetail, Coordinate coordinate) {
+    protected Cafe(String name, String contact, String introduction, String reward,
+                   int requiredStamps, Location location) {
         this();
         this.name = name;
         this.contact = contact;
         this.introduction = introduction;
         this.reward = reward;
         this.requiredStamps = requiredStamps;
-        this.city = city;
-        this.town = town;
-        this.addressDetail = addressDetail;
-        this.coordinate = coordinate;
+        this.location = location;
     }
 }

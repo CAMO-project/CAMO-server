@@ -28,13 +28,17 @@ CREATE TABLE IF NOT EXISTS Cafe
     cafe_introduction VARCHAR(1000) NOT NULL,
     reward            VARCHAR(100),
     required_stamps   INT,
-    city              VARCHAR(10)   NOT NULL,
-    town              VARCHAR(10)   NOT NULL,
-    address_detail    VARCHAR(100)  NOT NULL,
+    city              VARCHAR(20)   NOT NULL,
+    town              VARCHAR(20)   NOT NULL,
+    street            VARCHAR(20)   NOT NULL,
+    address_detail    VARCHAR(50)   NOT NULL,
+    road_address      VARCHAR(120)  NOT NULL,
     latitude          VARCHAR(15),
     longitude         VARCHAR(15),
     created_at        DATETIME(6),
-    updated_at        DATETIME(6)
+    updated_at        DATETIME(6),
+    user_id           VARCHAR(50)   NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Tag

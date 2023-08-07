@@ -17,15 +17,15 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 @Service
-public class KakaoApiService {
+public class KakaoAuthApiService {
 
-    private static final String KAKAO_API_HOST = "https://kapi.kakao.com";
+    private static final String KAKAO_AUTH_API_HOST = "https://kapi.kakao.com";
     private static final String TOKEN_INFORMATION_INQUIRY_API_ENDPOINT = "/v2/user/me";
     private static final String TOKEN_PREFIX = "Bearer ";
 
     private final RestTemplate restTemplate;
 
-    public KakaoApiService(RestTemplate restTemplate) {
+    public KakaoAuthApiService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -42,11 +42,11 @@ public class KakaoApiService {
         if (kakaoTokenResponse == null) {
             throw new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL);
         }
-        return kakaoTokenResponse.getId();
+        return kakaoTokenResponse.getKakaoId();
     }
 
     private RequestEntity<Void> generateRequestEntity(String token) {
-        URI uri = UriComponentsBuilder.fromUriString(KAKAO_API_HOST + TOKEN_INFORMATION_INQUIRY_API_ENDPOINT)
+        URI uri = UriComponentsBuilder.fromUriString(KAKAO_AUTH_API_HOST + TOKEN_INFORMATION_INQUIRY_API_ENDPOINT)
                 .build()
                 .encode(StandardCharsets.UTF_8)
                 .toUri();
@@ -66,5 +66,5 @@ public class KakaoApiService {
 @Getter
 class KakaoTokenResponse {
 
-    private String id;
+    private String kakaoId;
 }

@@ -2,7 +2,7 @@ package team.moca.camo.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import team.moca.camo.domain.embedded.Location;
+import team.moca.camo.domain.embedded.Address;
 import team.moca.camo.domain.value.Domain;
 
 import javax.persistence.Column;
@@ -39,7 +39,7 @@ public class Cafe extends BaseEntity {
     private int requiredStamps;
 
     @Embedded
-    private Location location;
+    private Address address;
 
     @Column(name = "rating_average", nullable = false)
     private double ratingAverage;
@@ -83,14 +83,14 @@ public class Cafe extends BaseEntity {
 
     @Builder
     protected Cafe(String name, String contact, String introduction, String reward,
-                   int requiredStamps, Location location, String businessRegistrationNumber) {
+                   int requiredStamps, Address address, String businessRegistrationNumber) {
         this();
         this.name = name;
         this.contact = contact;
         this.introduction = introduction;
         this.reward = reward;
         this.requiredStamps = requiredStamps;
-        this.location = location;
+        this.address = address;
         this.businessRegistrationNumber = businessRegistrationNumber;
     }
 }

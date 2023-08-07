@@ -33,8 +33,6 @@ CREATE TABLE IF NOT EXISTS Cafe
     street                       VARCHAR(20)   NOT NULL,
     address_detail               VARCHAR(50)   NOT NULL,
     road_address                 VARCHAR(120)  NOT NULL,
-    latitude                     VARCHAR(15),
-    longitude                    VARCHAR(15),
     rating_average               DOUBLE        NOT NULL,
     favorites_count              INT           NOT NULL,
     business_registration_number VARCHAR(15)   NOT NULL,

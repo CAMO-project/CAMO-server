@@ -5,7 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.moca.camo.api.KakaoApiService;
+import team.moca.camo.api.KakaoAuthApiService;
 import team.moca.camo.controller.dto.request.LoginRequest;
 import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.controller.dto.response.LoginResponse;
@@ -35,14 +35,14 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final SmsService smsService;
     private final PasswordEncoder passwordEncoder;
-    private final KakaoApiService kakaoApiService;
+    private final KakaoAuthApiService kakaoAuthApiService;
 
-    public AuthenticationService(JwtUtils jwtUtils, UserRepository userRepository, SmsService smsService, PasswordEncoder passwordEncoder, KakaoApiService kakaoApiService) {
+    public AuthenticationService(JwtUtils jwtUtils, UserRepository userRepository, SmsService smsService, PasswordEncoder passwordEncoder, KakaoAuthApiService kakaoAuthApiService) {
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
         this.smsService = smsService;
         this.passwordEncoder = passwordEncoder;
-        this.kakaoApiService = kakaoApiService;
+        this.kakaoAuthApiService = kakaoAuthApiService;
     }
 
     public String getNewAccessToken(final String refreshToken) {
@@ -122,7 +122,7 @@ public class AuthenticationService {
         User user = userRepository.findById(authenticatedAccountId)
                 .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
 
-        String kakaoAccountId = kakaoApiService.getKakaoAccountId(kakaoToken);
+        String kakaoAccountId = kakaoAuthApiService.getKakaoAccountId(kakaoToken);
         user.integrateKakaoAccount(kakaoAccountId);
     }
 
@@ -145,7 +145,7 @@ public class AuthenticationService {
     }
 
     public LoginResponse loginWithKakaoAccount(final String kakaoToken) {
-        String kakaoAccountId = kakaoApiService.getKakaoAccountId(kakaoToken);
+        String kakaoAccountId = kakaoAuthApiService.getKakaoAccountId(kakaoToken);
         User user = userRepository.findByKakaoId(kakaoAccountId)
                 .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
 

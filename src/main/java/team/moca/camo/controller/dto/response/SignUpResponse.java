@@ -5,11 +5,9 @@ import lombok.Getter;
 @Getter
 public class SignUpResponse {
 
-    private final boolean camoAccount;
-    private final boolean kakaoAccount;
+    private final String accountId;
 
-    public SignUpResponse(boolean camoAccount, boolean kakaoAccount) {
-        this.camoAccount = camoAccount;
-        this.kakaoAccount = kakaoAccount;
+    public SignUpResponse(String accountId) {
+        this.accountId = accountId;
     }
 }

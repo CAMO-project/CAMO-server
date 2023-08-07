@@ -5,9 +5,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import team.moca.camo.TestUtils;
+import team.moca.camo.controller.dto.request.LoginRequest;
 import team.moca.camo.controller.dto.request.SignUpRequest;
+import team.moca.camo.controller.dto.response.LoginResponse;
 import team.moca.camo.domain.User;
+import team.moca.camo.exception.BusinessException;
 import team.moca.camo.repository.UserRepository;
 import team.moca.camo.security.jwt.JwtUtils;
 
@@ -17,6 +21,7 @@ import java.time.Duration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
 @DisplayName("인증 테스트")
@@ -30,6 +35,8 @@ class AuthenticationServiceTest {
     private JwtUtils jwtUtils;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @DisplayName("Refresh Token이 유효한 경우 새로운 Access Token을 발급한다.")
     @Test
@@ -164,5 +171,61 @@ class AuthenticationServiceTest {
 
         // then
         assertThatThrownBy(() -> authenticationService.createNewEmailAccount(testSignUpRequest));
+    }
+
+    @DisplayName("올바른 이메일과 비밀번호를 입력하면 로그인이 성공하고 access token과 refresh token이 발급된다.")
+    @Test
+    void loginSuccessAccessTokenAndRefreshTokenIssued() throws Exception {
+        // given
+        User user = TestUtils.getTestUserInstance();
+        userRepository.save(user);
+
+        // when
+        String email = "test@gmail.com";
+        String password = "test1234";
+        LoginResponse loginResponse =
+                authenticationService.loginWithEmailAccount(new LoginRequest(email, password));
+        String accessToken = loginResponse.getAccessToken();
+        String refreshToken = loginResponse.getRefreshToken();
+
+        // then
+        assertThat(accessToken).isNotBlank();
+        assertThat(refreshToken).isNotBlank();
+        assertDoesNotThrow(() -> jwtUtils.isValidToken(accessToken));
+        assertDoesNotThrow(() -> jwtUtils.isValidToken(refreshToken));
+    }
+
+    @DisplayName("존재하지 않는 이메일을 입력하면 로그인에 실패한다.")
+    @Test
+    void loginFailNonExistEmail() throws Exception {
+        // given
+        User user = TestUtils.getTestUserInstance();
+        userRepository.save(user);
+
+        // when
+        String email = "fali@gmail.com";
+        String password = "test1234";
+
+        // then
+        assertThatThrownBy(() ->
+                authenticationService.loginWithEmailAccount(new LoginRequest(email, password)))
+                .isInstanceOf(BusinessException.class);
+    }
+
+    @DisplayName("비밀번호를 올바르게 입력하지 않으면 로그인에 실패한다.")
+    @Test
+    void loginFailInvalidPassword() throws Exception {
+        // given
+        User user = TestUtils.getTestUserInstance();
+        userRepository.save(user);
+
+        // when
+        String email = "fali@gmail.com";
+        String password = "fail1234";
+
+        // then
+        assertThatThrownBy(() ->
+                authenticationService.loginWithEmailAccount(new LoginRequest(email, password)))
+                .isInstanceOf(BusinessException.class);
     }
 }

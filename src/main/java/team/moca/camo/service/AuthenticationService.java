@@ -1,11 +1,14 @@
 package team.moca.camo.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.moca.camo.common.ThreadSafeDistinctMemory;
+import team.moca.camo.api.KakaoApiService;
+import team.moca.camo.controller.dto.request.LoginRequest;
 import team.moca.camo.controller.dto.request.SignUpRequest;
+import team.moca.camo.controller.dto.response.LoginResponse;
 import team.moca.camo.domain.User;
 import team.moca.camo.exception.BusinessException;
 import team.moca.camo.exception.error.AuthenticationError;
@@ -19,12 +22,11 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Transactional(readOnly = true)
 @Service
 public class AuthenticationService {
 
-    private static final ThreadSafeDistinctMemory<String> threadSafeDistinctMemory =
-            new ThreadSafeDistinctMemory<>();
     private static final Map<String, Integer> phoneVerificationCodeMemory = new ConcurrentHashMap<>();
     private static final Duration ACCESS_TOKEN_VALIDITY_PERIOD = Duration.ofHours(2);
     private static final Duration REFRESH_TOKEN_VALIDITY_PERIOD = Duration.ofDays(30);
@@ -33,12 +35,14 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final SmsService smsService;
     private final PasswordEncoder passwordEncoder;
+    private final KakaoApiService kakaoApiService;
 
-    public AuthenticationService(JwtUtils jwtUtils, UserRepository userRepository, SmsService smsService, PasswordEncoder passwordEncoder) {
+    public AuthenticationService(JwtUtils jwtUtils, UserRepository userRepository, SmsService smsService, PasswordEncoder passwordEncoder, KakaoApiService kakaoApiService) {
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
         this.smsService = smsService;
         this.passwordEncoder = passwordEncoder;
+        this.kakaoApiService = kakaoApiService;
     }
 
     public String getNewAccessToken(final String refreshToken) {
@@ -68,10 +72,6 @@ public class AuthenticationService {
 
     public String validateEmail(final String email) {
         checkEmailDuplicate(email);
-
-        if (threadSafeDistinctMemory.contains(email)) {
-            throw new BusinessException(AuthenticationError.EMAIL_DUPLICATION);
-        }
         return email;
     }
 
@@ -115,5 +115,44 @@ public class AuthenticationService {
         }
 
         return passwordEncoder.encode(password);
+    }
+
+    @Transactional
+    public void integrateKakaoAccountWithEmailAccount(final String authenticatedAccountId, final String kakaoToken) {
+        User user = userRepository.findById(authenticatedAccountId)
+                .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
+
+        String kakaoAccountId = kakaoApiService.getKakaoAccountId(kakaoToken);
+        user.integrateKakaoAccount(kakaoAccountId);
+    }
+
+    public LoginResponse loginWithEmailAccount(final LoginRequest loginRequest) {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
+        validatePassword(password, user.getPassword());
+
+        String accessToken = jwtUtils.generateToken(user, ACCESS_TOKEN_VALIDITY_PERIOD);
+        String refreshToken = jwtUtils.generateToken(user, REFRESH_TOKEN_VALIDITY_PERIOD);
+        return new LoginResponse(accessToken, refreshToken);
+    }
+
+    private void validatePassword(final String inputPassword, final String expectedPassword) {
+        if (!passwordEncoder.matches(inputPassword, expectedPassword)) {
+            throw new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL);
+        }
+    }
+
+    public LoginResponse loginWithKakaoAccount(final String kakaoToken) {
+        String kakaoAccountId = kakaoApiService.getKakaoAccountId(kakaoToken);
+        User user = userRepository.findByKakaoId(kakaoAccountId)
+                .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
+
+        String accessToken = jwtUtils.generateToken(user, ACCESS_TOKEN_VALIDITY_PERIOD);
+        String refreshToken = jwtUtils.generateToken(user, REFRESH_TOKEN_VALIDITY_PERIOD);
+
+        log.info("User login [{}]", user.getEmail());
+        return new LoginResponse(accessToken, refreshToken);
     }
 }

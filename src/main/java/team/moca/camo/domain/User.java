@@ -33,7 +33,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "email", unique = true, nullable = false, updatable = false, length = 50)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "phone", nullable = false, unique = true, length = 15)
@@ -92,6 +92,10 @@ public class User extends BaseEntity implements UserDetails {
                 .phone(signUpRequest.getPhone())
                 .nickname(signUpRequest.getNickname())
                 .build();
+    }
+
+    public void integrateKakaoAccount(String kakaoId) {
+        this.kakaoId = kakaoId;
     }
 
     @Override

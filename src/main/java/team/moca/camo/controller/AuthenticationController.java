@@ -53,7 +53,7 @@ public class AuthenticationController {
             @Valid @RequestBody EmailDuplicateRequest emailDuplicateRequest
     ) {
         String validEmail = authenticationService.validateEmail(emailDuplicateRequest.getEmail());
-        return ResponseDto.of(new EmailDuplicateResponse(validEmail));
+        return ResponseDto.of(new EmailDuplicateResponse(validEmail), "Email available.");
     }
 
     @PostMapping("/signup")

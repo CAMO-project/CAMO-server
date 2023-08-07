@@ -81,4 +81,13 @@ public class AuthenticationController {
         log.info("User login [{}]", loginRequest.getEmail());
         return ResponseDto.of(loginResponse, "You have successfully logged in.");
     }
+
+    @PostMapping("/login/kakao")
+    public ResponseDto<LoginResponse> kakaoLogin(
+            @Valid @RequestBody KakaoAccountRequest kakaoAccountRequest
+    ) {
+        LoginResponse loginResponse =
+                authenticationService.loginWithKakaoAccount(kakaoAccountRequest.getKakaoToken());
+        return ResponseDto.of(loginResponse, "You have successfully logged in with Kakao account.");
+    }
 }

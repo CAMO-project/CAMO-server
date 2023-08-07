@@ -3,11 +3,11 @@ package team.moca.camo.api;
 import lombok.Getter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import team.moca.camo.exception.BusinessException;
@@ -31,10 +31,10 @@ public class KakaoApiService {
 
     public String getKakaoAccountId(String token) {
         RequestEntity<Void> request = generateRequestEntity(token);
-        ResponseEntity<KakaoTokenResponse> response = restTemplate.exchange(request, KakaoTokenResponse.class);
-
-        HttpStatus statusCode = response.getStatusCode();
-        if (!statusCode.is2xxSuccessful()) {
+        ResponseEntity<KakaoTokenResponse> response;
+        try {
+            response = restTemplate.exchange(request, KakaoTokenResponse.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
             throw new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL);
         }
 

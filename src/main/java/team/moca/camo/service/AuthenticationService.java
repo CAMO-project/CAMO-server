@@ -1,5 +1,6 @@
 package team.moca.camo.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Transactional(readOnly = true)
 @Service
 public class AuthenticationService {
@@ -140,5 +142,17 @@ public class AuthenticationService {
         if (!passwordEncoder.matches(inputPassword, expectedPassword)) {
             throw new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL);
         }
+    }
+
+    public LoginResponse loginWithKakaoAccount(final String kakaoToken) {
+        String kakaoAccountId = kakaoApiService.getKakaoAccountId(kakaoToken);
+        User user = userRepository.findByKakaoId(kakaoAccountId)
+                .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
+
+        String accessToken = jwtUtils.generateToken(user, ACCESS_TOKEN_VALIDITY_PERIOD);
+        String refreshToken = jwtUtils.generateToken(user, REFRESH_TOKEN_VALIDITY_PERIOD);
+
+        log.info("User login [{}]", user.getEmail());
+        return new LoginResponse(accessToken, refreshToken);
     }
 }

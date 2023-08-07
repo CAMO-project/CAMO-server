@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Getter
 @Table(name = "Event")
@@ -28,6 +29,12 @@ public class Event extends BaseEntity {
     @Column(name = "event_url", length = 200)
     private String eventUrl;
 
+    @Column(name = "event_start", nullable = false)
+    private LocalDateTime eventStart;
+
+    @Column(name = "event_end", nullable = false)
+    private LocalDateTime eventEnd;
+
     @JoinColumn(name = "cafe_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Cafe cafe;
@@ -37,11 +44,14 @@ public class Event extends BaseEntity {
     }
 
     @Builder
-    protected Event(String title, String contents, String imageUrl, String eventUrl) {
+    protected Event(String title, String contents, String imageUrl, String eventUrl,
+                    LocalDateTime eventStart, LocalDateTime eventEnd) {
         this();
         this.title = title;
         this.contents = contents;
         this.imageUrl = imageUrl;
         this.eventUrl = eventUrl;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
     }
 }

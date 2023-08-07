@@ -47,6 +47,9 @@ public class Cafe extends BaseEntity {
     @Column(name = "favorites_count", nullable = false)
     private int favoritesCount;
 
+    @Column(name = "business_registration_number", nullable = false, length = 15)
+    private String businessRegistrationNumber;
+
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
@@ -80,7 +83,7 @@ public class Cafe extends BaseEntity {
 
     @Builder
     protected Cafe(String name, String contact, String introduction, String reward,
-                   int requiredStamps, Location location) {
+                   int requiredStamps, Location location, String businessRegistrationNumber) {
         this();
         this.name = name;
         this.contact = contact;
@@ -88,5 +91,6 @@ public class Cafe extends BaseEntity {
         this.reward = reward;
         this.requiredStamps = requiredStamps;
         this.location = location;
+        this.businessRegistrationNumber = businessRegistrationNumber;
     }
 }

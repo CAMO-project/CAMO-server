@@ -29,7 +29,7 @@ public class KakaoAuthApiService {
         this.restTemplate = restTemplate;
     }
 
-    public String getKakaoAccountId(String token) {
+    public String getKakaoAccountId(final String token) {
         RequestEntity<Void> request = generateRequestEntity(token);
         ResponseEntity<KakaoTokenResponse> response;
         try {
@@ -45,7 +45,7 @@ public class KakaoAuthApiService {
         return kakaoTokenResponse.getKakaoId();
     }
 
-    private RequestEntity<Void> generateRequestEntity(String token) {
+    private RequestEntity<Void> generateRequestEntity(final String token) {
         URI uri = UriComponentsBuilder.fromUriString(KAKAO_AUTH_API_HOST + TOKEN_INFORMATION_INQUIRY_API_ENDPOINT)
                 .build()
                 .encode(StandardCharsets.UTF_8)

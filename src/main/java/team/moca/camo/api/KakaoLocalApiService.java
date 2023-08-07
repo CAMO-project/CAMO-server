@@ -31,7 +31,7 @@ public class KakaoLocalApiService {
         this.restTemplate = restTemplate;
     }
 
-    public KakaoAddressResponse coordinatesToAddress(Coordinates coordinates) {
+    public KakaoAddressResponse coordinatesToAddress(final Coordinates coordinates) {
         RequestEntity<Void> request = generateRequestEntity(COORDINATES_TO_ADDRESS_ENDPOINT, coordinates);
         ResponseEntity<KakaoLocalResponseDto<KakaoAddressResponse>> response;
         try {

@@ -10,6 +10,9 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Address {
 
+    @Column(name = "state", nullable = false, length = 20)
+    private String state;
+
     @Column(name = "city", nullable = false, length = 20)
     private String city;
 
@@ -22,14 +25,15 @@ public class Address {
     @Column(name = "address_detail", nullable = false, length = 50)
     private String addressDetail;
 
-    @Column(name = "road_address", nullable = false, length = 120)
+    @Column(name = "road_address", nullable = false, length = 100)
     private String roadAddress;
 
     protected Address() {
     }
 
     @Builder
-    protected Address(String city, String town, String street, String addressDetail, String roadAddress) {
+    protected Address(String state, String city, String town, String street, String addressDetail, String roadAddress) {
+        this.state = state;
         this.city = city;
         this.town = town;
         this.street = street;

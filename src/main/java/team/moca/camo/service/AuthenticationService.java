@@ -119,11 +119,11 @@ public class AuthenticationService {
 
     @Transactional
     public void integrateKakaoAccountWithEmailAccount(final String authenticatedAccountId, final String kakaoToken) {
-        User user = userRepository.findById(authenticatedAccountId)
+        User authenticatedUser = userRepository.findById(authenticatedAccountId)
                 .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
 
         String kakaoAccountId = kakaoAuthApiService.getKakaoAccountId(kakaoToken);
-        user.integrateKakaoAccount(kakaoAccountId);
+        authenticatedUser.integrateKakaoAccount(kakaoAccountId);
     }
 
     public LoginResponse loginWithEmailAccount(final LoginRequest loginRequest) {

@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @Slf4j
+@DisplayName("카페 서비스 테스트")
 @ExtendWith(value = MockitoExtension.class)
 class CafeServiceTest {
 
@@ -47,7 +48,7 @@ class CafeServiceTest {
         User testUser = TestUtils.getTestUserInstance();
 
         // when
-        when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
+        when(userRepository.findWithFavoriteCafesById(testUser.getId())).thenReturn(Optional.of(testUser));
         KakaoAddressResponse addressResponse = KakaoAddressResponse.builder()
                 .region2depthName("test")
                 .build();
@@ -78,7 +79,7 @@ class CafeServiceTest {
         User testUser = GuestUser.getInstance();
 
         // when
-        when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
+        when(userRepository.findWithFavoriteCafesById(testUser.getId())).thenReturn(Optional.of(testUser));
         KakaoAddressResponse addressResponse = KakaoAddressResponse.builder()
                 .region2depthName("test")
                 .build();

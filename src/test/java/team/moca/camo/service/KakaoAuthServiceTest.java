@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @Slf4j
+@DisplayName("카카오 인증 테스트")
 @ExtendWith(value = MockitoExtension.class)
 public class KakaoAuthServiceTest {
 

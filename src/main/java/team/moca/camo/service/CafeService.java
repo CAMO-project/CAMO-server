@@ -56,7 +56,7 @@ public class CafeService {
         if (authenticatedAccountId == null) {
             return GuestUser.getInstance();
         } else {
-            return userRepository.findById(authenticatedAccountId)
+            return userRepository.findWithFavoriteCafesById(authenticatedAccountId)
                     .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
         }
     }

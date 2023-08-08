@@ -8,6 +8,9 @@ public class TestUtils {
 
     private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
+    private TestUtils() {
+    }
+
     private static final User USER_INSTANCE = User.builder()
             .email("test@gmail.com")
             .password(PASSWORD_ENCODER.encode("test1234"))

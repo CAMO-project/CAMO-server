@@ -16,6 +16,7 @@ public class TestUtils {
             .password(PASSWORD_ENCODER.encode("test1234"))
             .phone("01012345678")
             .nickname("test")
+            .kakaoId("test")
             .build();
 
     public static User getTestUserInstance() {

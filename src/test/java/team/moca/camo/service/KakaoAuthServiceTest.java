@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
 import team.moca.camo.TestUtils;
 import team.moca.camo.api.KakaoAuthApiService;
 import team.moca.camo.controller.dto.response.LoginResponse;
@@ -28,7 +27,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @Slf4j
-@Transactional
 @ExtendWith(value = MockitoExtension.class)
 public class KakaoAuthServiceTest {
 
@@ -48,14 +46,14 @@ public class KakaoAuthServiceTest {
         // given
         User testUser = TestUtils.getTestUserInstance();
 
+        // when
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
         String testKakaoId = "Test Kakao ID";
         when(kakaoAuthApiService.getKakaoAccountId(anyString())).thenReturn(testKakaoId);
 
-        // when
+        // then
         authenticationService.integrateKakaoAccountWithEmailAccount(testUser.getId(), "test");
 
-        // then
         assertThat(testUser.getKakaoId()).isNotNull();
         assertThat(testUser.getKakaoId()).isEqualTo(testKakaoId);
     }
@@ -66,13 +64,12 @@ public class KakaoAuthServiceTest {
         // given
         User testUser = TestUtils.getTestUserInstance();
 
+        // when
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.empty());
 
-        // when
+        // then
         assertThatThrownBy(() ->
                 authenticationService.integrateKakaoAccountWithEmailAccount(testUser.getId(), "test"));
-
-        // then
     }
 
     @DisplayName("카카오 인증 토큰이 유효하지 않은 경우 계정 연동에 실패한다.")
@@ -81,15 +78,14 @@ public class KakaoAuthServiceTest {
         // given
         User testUser = TestUtils.getTestUserInstance();
 
+        // when
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
         when(kakaoAuthApiService.getKakaoAccountId(anyString()))
                 .thenThrow(new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
 
-        // when
+        // then
         assertThatThrownBy(() ->
                 authenticationService.integrateKakaoAccountWithEmailAccount(testUser.getId(), "test"));
-
-        // then
     }
 
     @DisplayName("카카오 계정이 연동되어 있는 경우 카카오 로그인에 성공한다.")
@@ -98,14 +94,14 @@ public class KakaoAuthServiceTest {
         // given
         User testUser = TestUtils.getTestUserInstance();
 
+        // when
         when(kakaoAuthApiService.getKakaoAccountId(anyString())).thenReturn(testUser.getKakaoId());
         when(userRepository.findByKakaoId(testUser.getKakaoId())).thenReturn(Optional.of(testUser));
         when(jwtUtils.generateToken(eq(testUser), any(Duration.class))).thenReturn("json web token");
 
-        // when
+        // then
         LoginResponse loginResponse = authenticationService.loginWithKakaoAccount("test");
 
-        // then
         assertThat(loginResponse).isNotNull();
         assertThat(loginResponse.getAccessToken()).isNotNull();
         assertThat(loginResponse.getRefreshToken()).isNotNull();
@@ -117,13 +113,12 @@ public class KakaoAuthServiceTest {
         // given
         User testUser = TestUtils.getTestUserInstance();
 
+        // when
         when(kakaoAuthApiService.getKakaoAccountId(anyString())).thenReturn(testUser.getKakaoId());
         when(userRepository.findByKakaoId(testUser.getKakaoId())).thenReturn(Optional.empty());
 
-        // when
-        assertThatThrownBy(() -> authenticationService.loginWithKakaoAccount("test"));
-
         // then
+        assertThatThrownBy(() -> authenticationService.loginWithKakaoAccount("test"));
     }
 
     @DisplayName("카카오 인증 토큰이 유효하지 않은 경우 카카오 로그인에 실패한다.")
@@ -132,12 +127,11 @@ public class KakaoAuthServiceTest {
         // given
         User testUser = TestUtils.getTestUserInstance();
 
+        // when
         when(kakaoAuthApiService.getKakaoAccountId(anyString()))
                 .thenThrow(new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
 
-        // when
-        assertThatThrownBy(() -> authenticationService.loginWithKakaoAccount("test"));
-
         // then
+        assertThatThrownBy(() -> authenticationService.loginWithKakaoAccount("test"));
     }
 }

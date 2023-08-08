@@ -13,4 +13,11 @@ public class Coordinates {
 
     @JsonAlias(value = "x")
     private double longitude;
+
+    public static Coordinates of(double latitude, double longitude) {
+        Coordinates coordinates = new Coordinates();
+        coordinates.latitude = latitude;
+        coordinates.longitude = longitude;
+        return coordinates;
+    }
 }

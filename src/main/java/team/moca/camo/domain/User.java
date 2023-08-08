@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.domain.value.Domain;
 import team.moca.camo.domain.value.UserType;
@@ -27,7 +28,7 @@ import static java.util.stream.Collectors.toList;
 @Getter
 @Table(name = "User")
 @Entity
-public class User extends BaseEntity implements UserInterface {
+public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "email", unique = true, nullable = false, updatable = false, length = 50)
     private String email;
@@ -75,13 +76,14 @@ public class User extends BaseEntity implements UserInterface {
     }
 
     @Builder
-    protected User(String email, String password, String phone, String nickname, String kakaoId) {
+    protected User(String email, String password, String phone, String nickname, String kakaoId, UserType userType) {
         this();
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.nickname = nickname;
         this.kakaoId = kakaoId;
+        this.userType = userType;
     }
 
     public static User signUp(SignUpRequest signUpRequest, String encodedPassword) {

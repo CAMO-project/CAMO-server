@@ -9,7 +9,7 @@ import team.moca.camo.common.GuestUser;
 import team.moca.camo.controller.dto.CafeListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Favorite;
-import team.moca.camo.domain.UserInterface;
+import team.moca.camo.domain.User;
 import team.moca.camo.domain.value.Coordinates;
 import team.moca.camo.exception.BusinessException;
 import team.moca.camo.exception.error.AuthenticationError;
@@ -38,7 +38,7 @@ public class CafeService {
     }
 
     public List<CafeListResponse> getNearbyCafeList(final Coordinates userCoordinates, final String authenticatedAccountId) {
-        UserInterface requestUser = getAuthenticatedUserOrGuestUser(authenticatedAccountId);
+        User requestUser = getAuthenticatedUserOrGuestUser(authenticatedAccountId);
 
         KakaoAddressResponse userAddress = kakaoLocalApiService.coordinatesToAddress(userCoordinates);
         String region2depthName = userAddress.getRegion2depthName();
@@ -52,7 +52,7 @@ public class CafeService {
                 .collect(Collectors.toList());
     }
 
-    private UserInterface getAuthenticatedUserOrGuestUser(String authenticatedAccountId) {
+    private User getAuthenticatedUserOrGuestUser(String authenticatedAccountId) {
         if (authenticatedAccountId == null) {
             return GuestUser.getInstance();
         } else {
@@ -61,7 +61,7 @@ public class CafeService {
         }
     }
 
-    private boolean isFavoriteByUser(final UserInterface user, final Cafe cafe) {
+    private boolean isFavoriteByUser(final User user, final Cafe cafe) {
         List<Favorite> favorites = user.getFavorites();
         return favorites.stream()
                 .anyMatch(favorite -> favorite.getCafe().equals(cafe));

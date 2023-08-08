@@ -3,9 +3,10 @@ package team.moca.camo.service;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import team.moca.camo.TestUtils;
 import team.moca.camo.controller.dto.request.LoginRequest;
 import team.moca.camo.controller.dto.request.SignUpRequest;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @Slf4j
 @DisplayName("인증 테스트")
 @Transactional
+@ExtendWith(value = MockitoExtension.class)
 @SpringBootTest
 class AuthenticationServiceTest {
 
@@ -35,8 +37,6 @@ class AuthenticationServiceTest {
     private JwtUtils jwtUtils;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @DisplayName("Refresh Token이 유효한 경우 새로운 Access Token을 발급한다.")
     @Test

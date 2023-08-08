@@ -17,6 +17,10 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -27,6 +31,19 @@ import static java.util.stream.Collectors.toList;
 
 @Getter
 @Table(name = "User")
+@NamedEntityGraphs(
+        value = {
+                @NamedEntityGraph(
+                        name = "User.favoriteCafes",
+                        attributeNodes = {
+                                @NamedAttributeNode(value = "favorites", subgraph = "Favorite.cafes")
+                        },
+                        subgraphs = {
+                                @NamedSubgraph(name = "Favorite.cafes", attributeNodes = @NamedAttributeNode(value = "cafe"))
+                        }
+                )
+        }
+)
 @Entity
 public class User extends BaseEntity implements UserDetails {
 
@@ -76,13 +93,14 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Builder
-    protected User(String email, String password, String phone, String nickname, String kakaoId) {
+    protected User(String email, String password, String phone, String nickname, String kakaoId, UserType userType) {
         this();
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.nickname = nickname;
         this.kakaoId = kakaoId;
+        this.userType = userType;
     }
 
     public static User signUp(SignUpRequest signUpRequest, String encodedPassword) {

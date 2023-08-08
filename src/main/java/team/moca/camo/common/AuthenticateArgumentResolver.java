@@ -33,15 +33,27 @@ public class AuthenticateArgumentResolver implements HandlerMethodArgumentResolv
     ) throws Exception {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String token = getTokenFromRequestHeader(request);
+        if (token == null) {
+            checkRequired(parameter);
+            return null;
+        }
+
         return jwtUtils.extractAccountIdFromToken(token);
     }
 
     private String getTokenFromRequestHeader(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isBlank(authorizationHeader)) {
-            throw new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL);
+            return null;
         }
 
         return authorizationHeader.split(" ")[1];
+    }
+
+    private void checkRequired(MethodParameter parameter) {
+        Authenticate authenticateAnnotation = parameter.getParameterAnnotation(Authenticate.class);
+        if (authenticateAnnotation.required()) {
+            throw new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL);
+        }
     }
 }

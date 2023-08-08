@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface CafeRepository extends JpaRepository<Cafe, String> {
 
-    @Query(value = "SELECT c FROM Cafe c WHERE c.address.town = :town")
-    List<Cafe> findByTown(@Param(value = "town") String towns);
+    @Query(value = "SELECT c FROM Cafe c WHERE c.address.city = :city")
+    List<Cafe> findByCity(@Param(value = "city") String city);
 }

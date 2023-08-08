@@ -22,9 +22,9 @@ public class CafeController {
         this.cafeService = cafeService;
     }
 
-    @GetMapping("")
+    @GetMapping("/nearby")
     public ResponseDto<List<CafeListResponse>> userNearbyCafeList(
-            @Authenticate String authenticatedAccountId, @RequestBody Coordinates coordinates
+            @Authenticate(required = false) String authenticatedAccountId, @RequestBody Coordinates coordinates
     ) {
         List<CafeListResponse> nearbyCafeList = cafeService.getNearbyCafeList(coordinates, authenticatedAccountId);
         return ResponseDto.of(nearbyCafeList, "User's nearby cafe list.");

@@ -77,6 +77,7 @@ public class Cafe extends BaseEntity {
 
     protected Cafe() {
         super(Domain.CAFE);
+        requiredStamps = 0;
         ratingAverage = 0;
         favoritesCount = 0;
     }

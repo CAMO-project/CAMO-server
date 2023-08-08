@@ -32,7 +32,7 @@ public class CafeListResponse {
         return CafeListResponse.builder()
                 .cafeId(cafe.getId())
                 .cafeName(cafe.getName())
-                .location(cafe.getAddress().getTown())
+                .location(String.join(" ", cafe.getAddress().getCity(), cafe.getAddress().getTown()))
                 .ratingAverage(cafe.getRatingAverage())
                 .favoritesCount(cafe.getFavoritesCount())
                 .isFavorite(isFavorite)

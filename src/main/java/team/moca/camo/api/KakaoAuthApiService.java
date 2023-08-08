@@ -46,7 +46,7 @@ public class KakaoAuthApiService {
     }
 
     private RequestEntity<Void> generateRequestEntity(final String token) {
-        URI uri = UriComponentsBuilder.fromUriString(KAKAO_AUTH_API_HOST + TOKEN_INFORMATION_INQUIRY_API_ENDPOINT)
+        URI uri = UriComponentsBuilder.fromUriString(KAKAO_AUTH_API_HOST.concat(TOKEN_INFORMATION_INQUIRY_API_ENDPOINT))
                 .build()
                 .encode(StandardCharsets.UTF_8)
                 .toUri();
@@ -57,8 +57,8 @@ public class KakaoAuthApiService {
     private HttpHeaders generateKakaoTokenApiHeader(String token) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.CONTENT_TYPE,
-                MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=" + StandardCharsets.UTF_8);
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token);
+                String.join("", MediaType.APPLICATION_FORM_URLENCODED_VALUE, ";charset=", StandardCharsets.UTF_8.toString()));
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX.concat(token));
         return httpHeaders;
     }
 }

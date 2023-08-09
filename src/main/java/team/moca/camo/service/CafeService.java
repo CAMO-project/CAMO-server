@@ -50,7 +50,7 @@ public class CafeService {
 
         Page<Cafe> nearbyCafes =
                 cafeRepository.findByCity(region2depthName, PageRequest.of(page.getNowPage(), DEFAULT_PAGE_LIST_SIZE));
-        page.updateMaxPage(nearbyCafes.getTotalPages() - 1);
+        page.updateTotalPages(nearbyCafes.getTotalPages());
 
         return nearbyCafes.stream()
                 .map(cafe -> CafeListResponse.of(cafe, isFavoriteByUser(requestUser, cafe)))

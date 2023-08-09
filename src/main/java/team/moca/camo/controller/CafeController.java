@@ -26,8 +26,8 @@ public class CafeController {
 
     @GetMapping("/nearby")
     public PageResponseDto<List<CafeListResponse>> userNearbyCafeList(
-            @Authenticate(required = false) String authenticatedAccountId, @RequestBody Coordinates coordinates,
-            @RequestParam(name = "page", defaultValue = "0") int page
+            @Authenticate(required = false) String authenticatedAccountId,
+            @RequestBody Coordinates coordinates, @RequestParam(name = "page", defaultValue = "0") int page
     ) {
         PageDto pageDto = PageDto.of(page);
         List<CafeListResponse> nearbyCafeList = cafeService.getNearbyCafeList(coordinates, authenticatedAccountId, pageDto);

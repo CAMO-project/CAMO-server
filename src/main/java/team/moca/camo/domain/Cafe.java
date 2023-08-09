@@ -70,7 +70,7 @@ public class Cafe extends BaseEntity {
             joinColumns = @JoinColumn(name = "cafe_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @ManyToMany
-    private List<Cafe> cafes = new ArrayList<>();
+    private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "cafe")
     private List<Image> images = new ArrayList<>();

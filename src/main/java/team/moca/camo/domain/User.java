@@ -94,14 +94,13 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Builder
-    protected User(String email, String password, String phone, String nickname, String kakaoId, UserType userType) {
+    protected User(String email, String password, String phone, String nickname, String kakaoId) {
         this();
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.nickname = nickname;
         this.kakaoId = kakaoId;
-        this.userType = userType;
     }
 
     public static User signUp(SignUpRequest signUpRequest, String encodedPassword) {

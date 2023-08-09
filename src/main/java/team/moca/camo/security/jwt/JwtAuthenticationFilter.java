@@ -36,10 +36,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         validateRequestTokenHeader(requestTokenHeader);
 
         String requestToken = requestTokenHeader.substring(TOKEN_PREFIX.length());
-        validateRequestToken(requestToken);
 
-        Authentication authentication = jwtUtils.getAuthentication(requestToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (jwtUtils.isValidToken(requestToken)) {
+            Authentication authentication = jwtUtils.getAuthentication(requestToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 
         filterChain.doFilter(request, response);
     }
@@ -48,12 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (!StringUtils.startsWith(requestTokenHeader, TOKEN_PREFIX)) {
             logger.error("Authorization request header does not begin with 'Bearer ' String!");
             throw new RuntimeException("Authorization request header does not begin with 'Bearer ' String!");
-        }
-    }
-
-    private void validateRequestToken(String requestToken) {
-        if (!jwtUtils.isValidToken(requestToken)) {
-            throw new RuntimeException("JWT is invalid!");
         }
     }
 }

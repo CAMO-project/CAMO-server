@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS User
     password   VARCHAR(255) NOT NULL,
     phone      VARCHAR(15)  NOT NULL UNIQUE,
     nickname   VARCHAR(10),
-    kakao_id   VARCHAR(50),
+    kakao_id   VARCHAR(50) UNIQUE,
     withdrawn  BOOLEAN DEFAULT FALSE,
     user_type  VARCHAR(15)  NOT NULL,
     created_at DATETIME(6)  NOT NULL,

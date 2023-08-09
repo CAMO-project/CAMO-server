@@ -60,7 +60,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "nickname", length = 10)
     private String nickname;
 
-    @Column(name = "kakao_id", length = 50)
+    @Column(name = "kakao_id", unique = true, length = 50)
     private String kakaoId;
 
     @Column(name = "withdrawn")

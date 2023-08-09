@@ -43,3 +43,7 @@ src/main/resources/application-prod.properties
 src/test/resources/application.properties
 src/test/resources/application-dev.properties
 src/test/resources/application-prod.properties
+
+src/main/resources/db/camo.sql
+src/main/resources/db/data.csv
+src/main/resources/db/data.json

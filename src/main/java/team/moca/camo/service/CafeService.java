@@ -1,6 +1,7 @@
 package team.moca.camo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import team.moca.camo.DTO.CafeDTO;
 import team.moca.camo.domain.Cafe;
@@ -39,8 +40,8 @@ public class CafeService {
         return cafeRepository.findByNameContaining(searchKeyword);
     }
 
-    public List<Cafe> cafeList() {
-        return cafeRepository.findAll();
+    public Page<Cafe> cafeList(Pageable pageable) {
+        return cafeRepository.findAll(pageable);
     }
 
     //포함된 카페명으로 검색 기능 추가 예정

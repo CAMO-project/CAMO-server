@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import team.moca.camo.common.EntityGraphNames;
 import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.domain.value.Domain;
 import team.moca.camo.domain.value.UserType;
@@ -34,12 +35,12 @@ import static java.util.stream.Collectors.toList;
 @NamedEntityGraphs(
         value = {
                 @NamedEntityGraph(
-                        name = "User.favoriteCafes",
+                        name = EntityGraphNames.USER_FAVORITE_CAFES,
                         attributeNodes = {
-                                @NamedAttributeNode(value = "favorites", subgraph = "Favorite.cafes")
+                                @NamedAttributeNode(value = "favorites", subgraph = "Favorite.cafe")
                         },
                         subgraphs = {
-                                @NamedSubgraph(name = "Favorite.cafes", attributeNodes = @NamedAttributeNode(value = "cafe"))
+                                @NamedSubgraph(name = "Favorite.cafe", attributeNodes = @NamedAttributeNode(value = "cafe"))
                         }
                 )
         }

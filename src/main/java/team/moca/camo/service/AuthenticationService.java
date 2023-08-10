@@ -85,6 +85,7 @@ public class AuthenticationService {
 
         User signUpUser = User.signUp(signUpRequest, encodedPassword);
         User savedUser = userRepository.save(signUpUser);
+
         return savedUser.getId();
     }
 
@@ -123,6 +124,11 @@ public class AuthenticationService {
                 .orElseThrow(() -> new BusinessException(AuthenticationError.USER_AUTHENTICATION_FAIL));
 
         String kakaoAccountId = kakaoAuthApiService.getKakaoAccountId(kakaoToken);
+        Optional<User> optionalUser = userRepository.findByKakaoId(kakaoAccountId);
+        if (optionalUser.isPresent()) {
+            throw new BusinessException(AuthenticationError.KAKAO_ACCOUNT_ALREADY_INTEGRATED);
+        }
+
         authenticatedUser.integrateKakaoAccount(kakaoAccountId);
     }
 
@@ -151,8 +157,7 @@ public class AuthenticationService {
 
         String accessToken = jwtUtils.generateToken(user, ACCESS_TOKEN_VALIDITY_PERIOD);
         String refreshToken = jwtUtils.generateToken(user, REFRESH_TOKEN_VALIDITY_PERIOD);
-
-        log.info("User login [{}]", user.getEmail());
+        log.info("User login with Kakao [{}]", user.getEmail());
         return new LoginResponse(accessToken, refreshToken);
     }
 }

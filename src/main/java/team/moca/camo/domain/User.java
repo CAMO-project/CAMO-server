@@ -60,7 +60,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "nickname", length = 10)
     private String nickname;
 
-    @Column(name = "kakao_id", length = 50)
+    @Column(name = "kakao_id", unique = true, length = 50)
     private String kakaoId;
 
     @Column(name = "withdrawn")
@@ -94,14 +94,13 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Builder
-    protected User(String email, String password, String phone, String nickname, String kakaoId, UserType userType) {
+    protected User(String email, String password, String phone, String nickname, String kakaoId) {
         this();
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.nickname = nickname;
         this.kakaoId = kakaoId;
-        this.userType = userType;
     }
 
     public static User signUp(SignUpRequest signUpRequest, String encodedPassword) {

@@ -11,7 +11,8 @@ public enum AuthenticationError implements CamoError {
     EMAIL_DUPLICATION("C0003", "중복된 이메일입니다."),
     PHONE_DUPLICATION("C0004", "중복된 전화번호입니다."),
     NICKNAME_DUPLICATION("C0005", "중복된 닉네임입니다."),
-    PASSWORD_CHECK_MISMATCH("C0006", "비밀번호 확인이 일치하지 않습니다.");
+    PASSWORD_CHECK_MISMATCH("C0006", "비밀번호 확인이 일치하지 않습니다."),
+    KAKAO_ACCOUNT_ALREADY_INTEGRATED("C007", "해당 카카오 계정은 이미 연동되어 있습니다.");
 
     private final String errorCode;
     private final String message;

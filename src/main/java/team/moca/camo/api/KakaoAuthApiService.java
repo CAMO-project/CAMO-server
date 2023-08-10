@@ -1,5 +1,6 @@
 package team.moca.camo.api;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Getter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -66,5 +67,6 @@ public class KakaoAuthApiService {
 @Getter
 class KakaoTokenResponse {
 
+    @JsonAlias(value = "id")
     private String kakaoId;
 }

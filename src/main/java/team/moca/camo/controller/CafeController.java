@@ -3,10 +3,12 @@ package team.moca.camo.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.moca.camo.common.annotation.Authenticate;
-import team.moca.camo.controller.dto.CafeListResponse;
-import team.moca.camo.controller.dto.ResponseDto;
+import team.moca.camo.controller.dto.PageDto;
+import team.moca.camo.controller.dto.PageResponseDto;
+import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.value.Coordinates;
 import team.moca.camo.service.CafeService;
 
@@ -23,10 +25,12 @@ public class CafeController {
     }
 
     @GetMapping("/nearby")
-    public ResponseDto<List<CafeListResponse>> userNearbyCafeList(
-            @Authenticate(required = false) String authenticatedAccountId, @RequestBody Coordinates coordinates
+    public PageResponseDto<List<CafeListResponse>> userNearbyCafeList(
+            @Authenticate(required = false) String authenticatedAccountId,
+            @RequestBody Coordinates coordinates, @RequestParam(name = "page", defaultValue = "0") int page
     ) {
-        List<CafeListResponse> nearbyCafeList = cafeService.getNearbyCafeList(coordinates, authenticatedAccountId);
-        return ResponseDto.of(nearbyCafeList, "User's nearby cafe list.");
+        PageDto pageDto = PageDto.of(page);
+        List<CafeListResponse> nearbyCafeList = cafeService.getNearbyCafeList(coordinates, authenticatedAccountId, pageDto);
+        return PageResponseDto.of(nearbyCafeList, "User's nearby cafe list.", pageDto);
     }
 }

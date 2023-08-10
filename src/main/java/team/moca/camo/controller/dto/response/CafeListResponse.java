@@ -1,4 +1,4 @@
-package team.moca.camo.controller.dto;
+package team.moca.camo.controller.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,15 +7,12 @@ import team.moca.camo.domain.Cafe;
 @Getter
 public class CafeListResponse {
 
-    private String cafeId;
-    private String cafeName;
-    private String location;
-    private double ratingAverage;
-    private int favoritesCount;
-    private boolean isFavorite;
-
-    protected CafeListResponse() {
-    }
+    private final String cafeId;
+    private final String cafeName;
+    private final String location;
+    private final double ratingAverage;
+    private final int favoritesCount;
+    private final boolean isFavorite;
 
     @Builder
     protected CafeListResponse(String cafeId, String cafeName, String location, double ratingAverage,

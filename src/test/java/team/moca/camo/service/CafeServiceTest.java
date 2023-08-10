@@ -7,11 +7,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import team.moca.camo.TestUtils;
 import team.moca.camo.api.KakaoLocalApiService;
 import team.moca.camo.api.dto.KakaoAddressResponse;
 import team.moca.camo.common.GuestUser;
-import team.moca.camo.controller.dto.CafeListResponse;
+import team.moca.camo.controller.dto.PageDto;
+import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.User;
 import team.moca.camo.domain.embedded.Address;
@@ -24,6 +27,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -56,16 +60,16 @@ class CafeServiceTest {
                 .thenReturn(addressResponse);
 
         Cafe testCafe = Cafe.builder().name("Cafe A").address(Address.builder().city("test").town("test").build()).build();
-        when(cafeRepository.findByCity(addressResponse.getRegion2depthName()))
-                .thenReturn(List.of(
+        when(cafeRepository.findByCity(eq(addressResponse.getRegion2depthName()), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(
                         testCafe,
                         Cafe.builder().name("Cafe B").address(Address.builder().city("test").town("test").build()).build(),
                         Cafe.builder().name("Cafe C").address(Address.builder().city("test").town("test").build()).build()
-                ));
+                )));
 
         // then
         List<CafeListResponse> nearbyCafeList =
-                cafeService.getNearbyCafeList(Coordinates.of(37.1234, 127.1234), testUser.getId());
+                cafeService.getNearbyCafeList(Coordinates.of(37.1234, 127.1234), testUser.getId(), PageDto.of(0));
 
         assertThat(nearbyCafeList).isNotNull();
         assertThat(nearbyCafeList.size()).isEqualTo(3);
@@ -87,16 +91,16 @@ class CafeServiceTest {
                 .thenReturn(addressResponse);
 
         Cafe testCafe = Cafe.builder().name("Cafe A").address(Address.builder().city("test").town("test").build()).build();
-        when(cafeRepository.findByCity(addressResponse.getRegion2depthName()))
-                .thenReturn(List.of(
+        when(cafeRepository.findByCity(eq(addressResponse.getRegion2depthName()), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(
                         testCafe,
                         Cafe.builder().name("Cafe B").address(Address.builder().city("test").town("test").build()).build(),
                         Cafe.builder().name("Cafe C").address(Address.builder().city("test").town("test").build()).build()
-                ));
+                )));
 
         // then
         List<CafeListResponse> nearbyCafeList =
-                cafeService.getNearbyCafeList(Coordinates.of(37.1234, 127.1234), testUser.getId());
+                cafeService.getNearbyCafeList(Coordinates.of(37.1234, 127.1234), testUser.getId(), PageDto.of(0));
 
         assertThat(nearbyCafeList).isNotNull();
         assertThat(nearbyCafeList.size()).isEqualTo(3);

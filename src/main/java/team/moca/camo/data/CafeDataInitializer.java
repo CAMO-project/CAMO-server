@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Location;
 import team.moca.camo.domain.User;
@@ -27,7 +28,7 @@ import java.util.List;
 @Component
 public class CafeDataInitializer {
 
-    private static final String CSV_FILE_PATH = "/Users/jcw/cafe.csv";
+    private static final String CSV_FILE_PATH = "src/main/resources/data/cafe.csv";
 
     private final CafeRepository cafeRepository;
     private final CafeLocationRepository cafeLocationRepository;
@@ -44,6 +45,7 @@ public class CafeDataInitializer {
         this.initializeCafeData();
     }
 
+    @Transactional
     public void initializeCafeData() {
         User user = userRepository.findById("user_6974a0aa92834b1d944ffd4d90e8cbf9").get();
         List<CSVRow> cafeRow = readCSVFile();
@@ -60,7 +62,7 @@ public class CafeDataInitializer {
         List<CSVRow> rows = new ArrayList<>();
 
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(CafeDataInitializer.CSV_FILE_PATH)).withSkipLines(1).build()) {
-            String[] header = {"name", "category", "state", "city", "town", "road_address", "address_details", "latitude", "longitude"};
+            String[] header = {"name", "category", "state", "city", "town", "road_address", "address_details", "longitude", "latitude"};
             String[] data;
 
             while ((data = reader.readNext()) != null) {

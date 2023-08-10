@@ -56,9 +56,8 @@ public class LoggerFilter implements Filter {
                     .append("] ");
         });
 
-        String responseBody = new String(wrappedResponse.getContentAsByteArray());
-        log.info("\n<<<<< Response\nURI: '{}'\nMethod: {}\nHeader: {}\nBody: {}",
-                requestURI, requestMethod, responseHeaderValues, responseBody);
+        log.info("\n<<<<< Response\nURI: '{}'\nMethod: {}\nHeader: {}\n",
+                requestURI, requestMethod, responseHeaderValues);
 
         wrappedResponse.copyBodyToResponse();
     }

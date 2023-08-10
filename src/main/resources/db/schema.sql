@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Role
 CREATE TABLE IF NOT EXISTS Cafe
 (
     id                           VARCHAR(50)   NOT NULL UNIQUE PRIMARY KEY,
-    cafe_name                    VARCHAR(20)   NOT NULL,
+    cafe_name                    VARCHAR(50)   NOT NULL,
     cafe_contact                 VARCHAR(15),
     cafe_introduction            VARCHAR(1000) NOT NULL,
     reward                       VARCHAR(100),
@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS Cafe
     state                        VARCHAR(20)   NOT NULL,
     city                         VARCHAR(20)   NOT NULL,
     town                         VARCHAR(20)   NOT NULL,
-    street                       VARCHAR(20)   NOT NULL,
     address_detail               VARCHAR(50),
     road_address                 VARCHAR(100)  NOT NULL,
     rating_average               DOUBLE        NOT NULL,

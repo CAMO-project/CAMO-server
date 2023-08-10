@@ -19,9 +19,6 @@ public class Address {
     @Column(name = "town", nullable = false, length = 20)
     private String town;
 
-    @Column(name = "street", nullable = false, length = 20)
-    private String street;
-
     @Column(name = "address_detail", nullable = false, length = 50)
     private String addressDetail;
 
@@ -32,11 +29,10 @@ public class Address {
     }
 
     @Builder
-    protected Address(String state, String city, String town, String street, String addressDetail, String roadAddress) {
+    protected Address(String state, String city, String town, String addressDetail, String roadAddress) {
         this.state = state;
         this.city = city;
         this.town = town;
-        this.street = street;
         this.addressDetail = addressDetail;
         this.roadAddress = roadAddress;
     }

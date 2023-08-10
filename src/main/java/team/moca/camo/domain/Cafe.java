@@ -23,7 +23,7 @@ import java.util.List;
 @Entity
 public class Cafe extends BaseEntity {
 
-    @Column(name = "cafe_name", nullable = false, length = 20)
+    @Column(name = "cafe_name", nullable = false, length = 50)
     private String name;
 
     @Column(name = "cafe_contact", length = 15)

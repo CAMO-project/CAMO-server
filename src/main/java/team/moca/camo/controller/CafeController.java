@@ -10,6 +10,7 @@ import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.PageResponseDto;
 import team.moca.camo.controller.dto.request.CafeRequest;
 import team.moca.camo.controller.dto.response.CafeListResponse;
+import team.moca.camo.domain.User;
 import team.moca.camo.domain.value.Coordinates;
 import team.moca.camo.service.CafeService;
 
@@ -36,7 +37,7 @@ public class CafeController {
     }
 
     @GetMapping("/new")
-    public void RegisterCafe(@RequestBody CafeRequest cafeRequest) {
-        cafeService.createCafe(cafeRequest);
+    public void RegisterCafe(@RequestBody CafeRequest cafeRequest, User owner) {
+        cafeService.createCafe(cafeRequest, owner);
     }
 }

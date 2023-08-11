@@ -15,6 +15,7 @@ import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Favorite;
 import team.moca.camo.domain.User;
 import team.moca.camo.domain.value.Coordinates;
+import team.moca.camo.domain.value.UserType;
 import team.moca.camo.exception.BusinessException;
 import team.moca.camo.exception.error.AuthenticationError;
 import team.moca.camo.repository.CafeLocationRepository;
@@ -74,7 +75,8 @@ public class CafeService {
     }
 
 
-    public void createCafe(CafeRequest cafeRequest) {
+    public void createCafe(CafeRequest cafeRequest, User owner) {
+
         Cafe cafe = Cafe.builder()
                 .name(cafeRequest.getCafeName())
                 .address(cafeRequest.getAddress())
@@ -83,7 +85,12 @@ public class CafeService {
                 .build();
 
         cafeRepository.save(cafe);
-        //저장시 회원 역할 변경
 
+        //저장시 회원 역할 변경
+        if (owner.getUserType() == UserType.CUSTOMER) {
+            owner.updateUserType(UserType.CAFE_OWNER);
+
+            userRepository.save(owner);
+        }
     }
 }

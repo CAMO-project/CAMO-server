@@ -152,4 +152,8 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public void updateUserType(UserType userType) {
+        this.userType = userType;
+    }
 }

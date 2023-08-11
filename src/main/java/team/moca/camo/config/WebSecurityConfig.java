@@ -32,7 +32,7 @@ public class WebSecurityConfig {
                 .logout().disable()
                 .authorizeHttpRequests(
                         authorization -> authorization
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .sessionManagement(
                         session -> session

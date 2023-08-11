@@ -1,6 +1,8 @@
 package team.moca.camo.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +18,7 @@ import team.moca.camo.service.CafeService;
 
 import java.util.List;
 
+@Slf4j
 @RequestMapping("/api/cafes")
 @RestController
 public class CafeController {
@@ -36,13 +39,14 @@ public class CafeController {
         return PageResponseDto.of(nearbyCafeList, "User's nearby cafe list.", pageDto);
     }
 
-    @GetMapping("")
+    @GetMapping("/{cafe_id}")
     public ResponseDto<CafeDetailsResponse> cafeInformation(
             @Authenticate(required = false) String authenticatedAccountId,
-            @RequestParam(name = "cafe_id") String cafeId
+            @PathVariable(name = "cafe_id") String cafeId
     ) {
         CafeDetailsResponse cafeDetailsResponse =
                 cafeService.getCafeDetails(cafeId, authenticatedAccountId);
+        log.info("Cafe details information of [{}]", cafeId);
         return ResponseDto.of(cafeDetailsResponse, String.format("Cafe details information of [%s]", cafeId));
     }
 }

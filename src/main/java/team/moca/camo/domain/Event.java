@@ -23,10 +23,10 @@ public class Event extends BaseEntity {
     @Column(name = "event_contents", nullable = false, length = 500)
     private String contents;
 
-    @Column(name = "image_url", length = 200)
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
-    @Column(name = "event_url", length = 200)
+    @Column(name = "event_url", length = 500)
     private String eventUrl;
 
     @Column(name = "event_start", nullable = false)

@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Entity
 public class Image extends BaseEntity {
 
-    @Column(name = "image_url", nullable = false, length = 200)
+    @Column(name = "image_url", nullable = false, length = 500)
     private String url;
 
     @JoinColumn(name = "cafe_id", nullable = false)

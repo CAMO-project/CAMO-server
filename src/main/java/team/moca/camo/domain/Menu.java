@@ -25,7 +25,7 @@ public class Menu extends BaseEntity {
     @Column(name = "menu_price", nullable = false)
     private int price;
 
-    @Column(name = "image_url", length = 200)
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
     @Column(name = "likes_count", nullable = false)

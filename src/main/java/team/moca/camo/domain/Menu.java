@@ -31,6 +31,9 @@ public class Menu extends BaseEntity {
     @Column(name = "likes_count", nullable = false)
     private int likesCount;
 
+    @Column(name = "is_signature")
+    private boolean isSignature;
+
     @JoinColumn(name = "cafe_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Cafe cafe;
@@ -41,6 +44,7 @@ public class Menu extends BaseEntity {
     protected Menu() {
         super(Domain.MENU);
         likesCount = 0;
+        isSignature = false;
     }
 
     @Builder

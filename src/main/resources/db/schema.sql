@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS Cafe
     rating_average               DOUBLE        NOT NULL,
     favorites_count              INT           NOT NULL,
     business_registration_number VARCHAR(15)   NOT NULL,
+    is_signature                 BOOLEAN DEFAULT FALSE,
     created_at                   DATETIME(6)   NOT NULL,
     updated_at                   DATETIME(6),
     user_id                      VARCHAR(50)   NOT NULL,

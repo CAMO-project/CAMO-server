@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 public class CafeService {
 
     private static final int DEFAULT_PAGE_LIST_SIZE = 10;
+    public static final int NEARBY_DISTANCE = 5;
 
     private final CafeRepository cafeRepository;
     private final CafeLocationRepository cafeLocationRepository;
@@ -51,7 +52,7 @@ public class CafeService {
         PageRequest pageRequest = PageRequest.of(page.getNowPage(), DEFAULT_PAGE_LIST_SIZE);
         Page<Location> nearbyCafesLocation = cafeLocationRepository.findByCoordinatesNear(
                 new Point(userCoordinates.getLongitude(), userCoordinates.getLatitude()),
-                new Distance(5, Metrics.KILOMETERS), pageRequest
+                new Distance(NEARBY_DISTANCE, Metrics.KILOMETERS), pageRequest
         );
         page.updateTotalPages(nearbyCafesLocation.getTotalPages());
 

@@ -13,9 +13,7 @@ import team.moca.camo.controller.dto.response.CafeDetailsResponse;
 import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Favorite;
-import team.moca.camo.domain.Image;
 import team.moca.camo.domain.Location;
-import team.moca.camo.domain.Tag;
 import team.moca.camo.domain.User;
 import team.moca.camo.domain.value.Coordinates;
 import team.moca.camo.exception.BusinessException;
@@ -57,6 +55,10 @@ public class CafeService {
         );
         page.updateTotalPages(nearbyCafesLocation.getTotalPages());
 
+        return convertCafeLocationPageToCafeListResponseList(nearbyCafesLocation, requestUser);
+    }
+
+    private List<CafeListResponse> convertCafeLocationPageToCafeListResponseList(Page<Location> nearbyCafesLocation, User requestUser) {
         return nearbyCafesLocation.stream()
                 .map(location -> {
                     String cafeId = location.getId();
@@ -68,21 +70,15 @@ public class CafeService {
                 .collect(Collectors.toList());
     }
 
-    public CafeDetailsResponse getCafeDetails(final String cafeId, final String authenticatedAccountId) {
+    public CafeDetailsResponse getCafeDetailsInformation(final String cafeId, final String authenticatedAccountId) {
         User requestUser = getAuthenticatedUserOrGuestUserWithFindOption(authenticatedAccountId, userRepository::findWithFavoriteCafesById);
         Cafe cafe = cafeRepository.findById(cafeId).orElseThrow(() ->
                 new BusinessException(ClientRequestError.NON_EXISTENT_CAFE));
 
         int userStamps = couponService.getUserStampsCountForCafe(requestUser, cafe);
-
-        List<String> tagsName = cafe.getTags().stream()
-                .map(Tag::getTagName)
-                .collect(Collectors.toList());
-        List<String> imagesId = cafe.getImages().stream()
-                .map(Image::getId)
-                .collect(Collectors.toList());
         boolean isFavorite = isFavoriteByUser(requestUser, cafe);
-        return CafeDetailsResponse.of(cafe, userStamps, tagsName, imagesId, isFavorite);
+
+        return CafeDetailsResponse.of(cafe, userStamps, isFavorite);
     }
 
     private User getAuthenticatedUserOrGuestUserWithFindOption(

@@ -40,12 +40,12 @@ public class CafeController {
     }
 
     @GetMapping("/{cafe_id}")
-    public ResponseDto<CafeDetailsResponse> cafeInformation(
+    public ResponseDto<CafeDetailsResponse> cafeDetails(
             @Authenticate(required = false) String authenticatedAccountId,
             @PathVariable(name = "cafe_id") String cafeId
     ) {
         CafeDetailsResponse cafeDetailsResponse =
-                cafeService.getCafeDetails(cafeId, authenticatedAccountId);
+                cafeService.getCafeDetailsInformation(cafeId, authenticatedAccountId);
         log.info("Cafe details information of [{}]", cafeId);
         return ResponseDto.of(cafeDetailsResponse, String.format("Cafe details information of [%s]", cafeId));
     }

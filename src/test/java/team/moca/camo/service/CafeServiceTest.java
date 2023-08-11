@@ -9,16 +9,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import team.moca.camo.TestUtils;
-import team.moca.camo.api.KakaoLocalApiService;
-import team.moca.camo.api.dto.KakaoAddressResponse;
 import team.moca.camo.common.GuestUser;
 import team.moca.camo.controller.dto.PageDto;
+import team.moca.camo.controller.dto.response.CafeDetailsResponse;
 import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.Cafe;
+import team.moca.camo.domain.Location;
 import team.moca.camo.domain.User;
 import team.moca.camo.domain.embedded.Address;
 import team.moca.camo.domain.value.Coordinates;
+import team.moca.camo.repository.CafeLocationRepository;
 import team.moca.camo.repository.CafeRepository;
 import team.moca.camo.repository.UserRepository;
 
@@ -27,7 +31,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -41,9 +44,11 @@ class CafeServiceTest {
     @Mock
     private CafeRepository cafeRepository;
     @Mock
-    private KakaoLocalApiService kakaoLocalApiService;
-    @Mock
     private UserRepository userRepository;
+    @Mock
+    private CafeLocationRepository cafeLocationRepository;
+    @Mock
+    private CouponService couponService;
 
     @DisplayName("사용자 주변의 카페 목록을 가져올 수 있다.")
     @Test
@@ -53,19 +58,16 @@ class CafeServiceTest {
 
         // when
         when(userRepository.findWithFavoriteCafesById(testUser.getId())).thenReturn(Optional.of(testUser));
-        KakaoAddressResponse addressResponse = KakaoAddressResponse.builder()
-                .region2depthName("test")
-                .build();
-        when(kakaoLocalApiService.coordinatesToAddress(any(Coordinates.class)))
-                .thenReturn(addressResponse);
 
         Cafe testCafe = Cafe.builder().name("Cafe A").address(Address.builder().city("test").town("test").build()).build();
-        when(cafeRepository.findByCity(eq(addressResponse.getRegion2depthName()), any(Pageable.class)))
+        Location testLocation = Location.builder().id(testCafe.getId()).coordinates(new GeoJsonPoint(127.1111, 37.1111)).build();
+        when(cafeLocationRepository.findByCoordinatesNear(any(Point.class), any(Distance.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(
-                        testCafe,
-                        Cafe.builder().name("Cafe B").address(Address.builder().city("test").town("test").build()).build(),
-                        Cafe.builder().name("Cafe C").address(Address.builder().city("test").town("test").build()).build()
+                        testLocation,
+                        Location.builder().id("cafe_2").coordinates(new GeoJsonPoint(127.2222, 37.2222)).build(),
+                        Location.builder().id("cafe_3").coordinates(new GeoJsonPoint(127.3333, 37.3333)).build()
                 )));
+        when(cafeRepository.findById(any())).thenReturn(Optional.of(testCafe));
 
         // then
         List<CafeListResponse> nearbyCafeList =
@@ -81,22 +83,18 @@ class CafeServiceTest {
     void getNearbyCafeListOfGuestSuccess() throws Exception {
         // given
         User testUser = GuestUser.getInstance();
+        Cafe testCafe = TestUtils.getTestCafeInstance();
 
         // when
         when(userRepository.findWithFavoriteCafesById(testUser.getId())).thenReturn(Optional.of(testUser));
-        KakaoAddressResponse addressResponse = KakaoAddressResponse.builder()
-                .region2depthName("test")
-                .build();
-        when(kakaoLocalApiService.coordinatesToAddress(any(Coordinates.class)))
-                .thenReturn(addressResponse);
-
-        Cafe testCafe = Cafe.builder().name("Cafe A").address(Address.builder().city("test").town("test").build()).build();
-        when(cafeRepository.findByCity(eq(addressResponse.getRegion2depthName()), any(Pageable.class)))
+        Location testLocation = Location.builder().id(testCafe.getId()).coordinates(new GeoJsonPoint(127.1111, 37.1111)).build();
+        when(cafeLocationRepository.findByCoordinatesNear(any(Point.class), any(Distance.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(
-                        testCafe,
-                        Cafe.builder().name("Cafe B").address(Address.builder().city("test").town("test").build()).build(),
-                        Cafe.builder().name("Cafe C").address(Address.builder().city("test").town("test").build()).build()
+                        testLocation,
+                        Location.builder().id("cafe_2").coordinates(new GeoJsonPoint(127.2222, 37.2222)).build(),
+                        Location.builder().id("cafe_3").coordinates(new GeoJsonPoint(127.3333, 37.3333)).build()
                 )));
+        when(cafeRepository.findById(any())).thenReturn(Optional.of(testCafe));
 
         // then
         List<CafeListResponse> nearbyCafeList =
@@ -104,5 +102,27 @@ class CafeServiceTest {
 
         assertThat(nearbyCafeList).isNotNull();
         assertThat(nearbyCafeList.size()).isEqualTo(3);
+    }
+
+    @DisplayName("카페 상세 정보를 조회할 수 있다.")
+    @Test
+    void getCafeDetailsInformationSuccess() throws Exception {
+        // given
+        User testUser = TestUtils.getTestUserInstance();
+        Cafe testCafe = TestUtils.getTestCafeInstance();
+
+        // when
+        when(userRepository.findWithFavoriteCafesById(testUser.getId())).thenReturn(Optional.of(testUser));
+        when(cafeRepository.findById(testCafe.getId())).thenReturn(Optional.of(testCafe));
+        when(couponService.getUserStampsCountForCafe(testUser, testCafe)).thenReturn(0);
+
+        // then
+        CafeDetailsResponse cafeDetailsInformation =
+                cafeService.getCafeDetailsInformation(testCafe.getId(), testUser.getId());
+
+        assertThat(cafeDetailsInformation).isNotNull();
+        assertThat(cafeDetailsInformation.getCafeId()).isEqualTo(testCafe.getId());
+        assertThat(cafeDetailsInformation.getTags()).hasSize(0);
+        assertThat(cafeDetailsInformation.getImagesId()).hasSize(0);
     }
 }

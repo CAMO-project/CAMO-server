@@ -10,6 +10,7 @@ import team.moca.camo.exception.error.ClientRequestError;
 import team.moca.camo.repository.CafeRepository;
 import team.moca.camo.repository.EventRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,13 @@ public class EventService {
                 .orElseThrow(() -> new BusinessException(ClientRequestError.NON_EXISTENT_CAFE));
         List<Event> events = eventRepository.findByCafe(cafe);
         return events.stream()
+                .filter(this::isOngoingEvent)
                 .map(event -> EventListResponse.of(event, cafe))
                 .collect(Collectors.toList());
+    }
+
+    private boolean isOngoingEvent(final Event event) {
+        return event.getEventStart().isBefore(LocalDateTime.now()) &&
+                event.getEventEnd().isAfter(LocalDateTime.now());
     }
 }

@@ -3,9 +3,12 @@ package team.moca.camo.controller.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 import team.moca.camo.domain.Cafe;
+import team.moca.camo.domain.Image;
+import team.moca.camo.domain.Tag;
 import team.moca.camo.domain.embedded.Address;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class CafeDetailsResponse {
@@ -36,7 +39,7 @@ public class CafeDetailsResponse {
         this.isFavorite = isFavorite;
     }
 
-    public static CafeDetailsResponse of(Cafe cafe, int userStamps, List<String> tagsName, List<String> imagesId, boolean isFavorite) {
+    public static CafeDetailsResponse of(Cafe cafe, int userStamps, boolean isFavorite) {
         Address address = cafe.getAddress();
         return CafeDetailsResponse.builder()
                 .cafeId(cafe.getId())
@@ -46,8 +49,12 @@ public class CafeDetailsResponse {
                 .cafeIntroduction(cafe.getIntroduction())
                 .userStamps(userStamps)
                 .requiredStamps(cafe.getRequiredStamps())
-                .tags(tagsName)
-                .imagesId(imagesId)
+                .tags(cafe.getTags().stream()
+                        .map(Tag::getTagName)
+                        .collect(Collectors.toList()))
+                .imagesId(cafe.getImages().stream()
+                        .map(Image::getId)
+                        .collect(Collectors.toList()))
                 .isFavorite(isFavorite)
                 .build();
     }

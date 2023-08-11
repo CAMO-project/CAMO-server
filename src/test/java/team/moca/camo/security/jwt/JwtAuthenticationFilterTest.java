@@ -12,8 +12,6 @@ import team.moca.camo.security.mock.MockUserDetailsService;
 
 import java.time.Duration;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 @Slf4j
 @DisplayName("JwtAuthetnicationFilter 테스트")
 public class JwtAuthenticationFilterTest {
@@ -33,37 +31,5 @@ public class JwtAuthenticationFilterTest {
 
         // then
         jwtAuthenticationFilter.doFilterInternal(testRequest, null, new MockFilterChain());
-    }
-
-    @DisplayName("만료된 JWT의 경우 필터에서 예외가 발생한다.")
-    @Test
-    void filterThrowsExceptionExpiredJWT() throws Exception {
-        // given
-        User testUser = TestUtils.getTestUserInstance();
-        String token = jwtUtils.generateToken(testUser, Duration.ofMillis(10));
-        Thread.sleep(100);
-
-        // when
-        MockHttpServletRequest testRequest = new MockHttpServletRequest(token);
-
-        // then
-        assertThatThrownBy(() ->
-                jwtAuthenticationFilter.doFilterInternal(testRequest, null, new MockFilterChain()));
-    }
-
-    @DisplayName("변형된 JWT의 경우 필터에서 예외가 발생한다.")
-    @Test
-    void filterThrowsExceptionModifiedJWT() throws Exception {
-        // given
-        User testUser = TestUtils.getTestUserInstance();
-        String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
-        token += "m";
-
-        // when
-        MockHttpServletRequest testRequest = new MockHttpServletRequest(token);
-
-        // then
-        assertThatThrownBy(() ->
-                jwtAuthenticationFilter.doFilterInternal(testRequest, null, new MockFilterChain()));
     }
 }

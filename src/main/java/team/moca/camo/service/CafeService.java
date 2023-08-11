@@ -9,6 +9,7 @@ import team.moca.camo.api.KakaoLocalApiService;
 import team.moca.camo.api.dto.KakaoAddressResponse;
 import team.moca.camo.common.GuestUser;
 import team.moca.camo.controller.dto.PageDto;
+import team.moca.camo.controller.dto.request.CafeRequest;
 import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Favorite;
@@ -70,5 +71,19 @@ public class CafeService {
         List<Favorite> favorites = user.getFavorites();
         return favorites.stream()
                 .anyMatch(favorite -> favorite.getCafe().equals(cafe));
+    }
+
+
+    public void createCafe(CafeRequest cafeRequest) {
+        Cafe cafe = Cafe.builder()
+                .name(cafeRequest.getCafeName())
+                .address(cafeRequest.getAddress())
+                .contact(cafeRequest.getContact())
+                .businessRegistrationNumber(cafeRequest.getBusinessRegistrationNumber())
+                .build();
+
+        cafeRepository.save(cafe);
+        //저장시 회원 역할 변경
+
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import team.moca.camo.common.annotation.Authenticate;
 import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.PageResponseDto;
+import team.moca.camo.controller.dto.request.CafeRequest;
 import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.value.Coordinates;
 import team.moca.camo.service.CafeService;
@@ -32,5 +33,10 @@ public class CafeController {
         PageDto pageDto = PageDto.of(page);
         List<CafeListResponse> nearbyCafeList = cafeService.getNearbyCafeList(coordinates, authenticatedAccountId, pageDto);
         return PageResponseDto.of(nearbyCafeList, "User's nearby cafe list.", pageDto);
+    }
+
+    @GetMapping("/new")
+    public void RegisterCafe(@RequestBody CafeRequest cafeRequest) {
+        cafeService.createCafe(cafeRequest);
     }
 }

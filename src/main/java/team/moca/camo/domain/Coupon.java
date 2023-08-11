@@ -22,7 +22,7 @@ public class Coupon extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @JoinColumn(name = "cafe_id")
+    @JoinColumn(name = "cafe_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Cafe cafe;
 

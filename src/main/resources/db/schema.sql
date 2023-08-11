@@ -101,11 +101,11 @@ CREATE TABLE IF NOT EXISTS Coupon
     id         VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
     stamps     INT         NOT NULL,
     user_id    VARCHAR(50) NOT NULL,
-    cafe_id    VARCHAR(50),
+    cafe_id    VARCHAR(50) NOT NULL,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6),
     FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE,
-    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE SET NULL
+    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `Like`
@@ -124,11 +124,11 @@ CREATE TABLE IF NOT EXISTS Favorite
 (
     id         VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
     user_id    VARCHAR(50) NOT NULL,
-    cafe_id    VARCHAR(50),
+    cafe_id    VARCHAR(50) NOT NULL,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6),
     FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE,
-    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE SET NULL,
+    FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE CASCADE,
     CONSTRAINT favorite_unique UNIQUE (user_id, cafe_id)
 ) ENGINE = InnoDB;
 

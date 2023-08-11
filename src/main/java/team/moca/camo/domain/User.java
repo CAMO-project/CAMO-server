@@ -10,6 +10,7 @@ import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.domain.value.Domain;
 import team.moca.camo.domain.value.UserType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -75,16 +76,16 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "role_name")
     private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Cafe> cafes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Coupon> coupons = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Favorite> favorites = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserNotification> notifications = new ArrayList<>();
 
     protected User() {

@@ -12,7 +12,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import team.moca.camo.TestUtils;
-import team.moca.camo.common.AuthenticateArgumentResolver;
 import team.moca.camo.config.ObjectMapperConfig;
 import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.response.CafeListResponse;

@@ -76,6 +76,9 @@ public class Cafe extends BaseEntity {
     @OneToMany(mappedBy = "cafe", cascade = CascadeType.REMOVE)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.REMOVE)
+    private List<Review> reviews = new ArrayList<>();
+
     protected Cafe() {
         super(Domain.CAFE);
         requiredStamps = 0;

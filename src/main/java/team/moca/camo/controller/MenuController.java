@@ -24,7 +24,7 @@ public class MenuController {
     public ResponseDto<List<MenuListResponse>> signatureMenusOfCafe(
             @RequestParam(name = "cafe_id") String cafeId
     ) {
-        List<MenuListResponse> signatureMenus = menuService.getSignatureMenusOfCafe(cafeId);
-        return ResponseDto.of(signatureMenus, String.format("Signature menus of cafe [%s]", cafeId));
+        List<MenuListResponse> signatureMenuList = menuService.getSignatureMenuListOfCafe(cafeId);
+        return ResponseDto.of(signatureMenuList, String.format("Signature menus of cafe [%s]", cafeId));
     }
 }

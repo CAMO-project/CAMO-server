@@ -88,6 +88,9 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserNotification> notifications = new ArrayList<>();
 
+    @OneToMany(mappedBy = "writer")
+    private List<Review> reviews = new ArrayList<>();
+
     protected User() {
         super(Domain.USER);
         withdrawn = false;

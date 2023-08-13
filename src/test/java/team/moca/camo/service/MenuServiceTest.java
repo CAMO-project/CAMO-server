@@ -46,7 +46,7 @@ class MenuServiceTest {
         Menu testMenu = Menu.builder().name("test menu 1").price(10_000).build();
         when(menuRepository.findByCafeAndIsSignature(eq(testCafe), any(Boolean.class)))
                 .thenReturn(List.of(testMenu, Menu.builder().name("test menu 2").price(5_000).build()));
-        List<MenuListResponse> signatureMenus = menuService.getSignatureMenusOfCafe(testCafe.getId());
+        List<MenuListResponse> signatureMenus = menuService.getSignatureMenuListOfCafe(testCafe.getId());
 
         // then
         assertThat(signatureMenus).isNotNull();

@@ -122,6 +122,9 @@ class CafeServiceTest {
 
         assertThat(cafeDetailsInformation).isNotNull();
         assertThat(cafeDetailsInformation.getCafeId()).isEqualTo(testCafe.getId());
+        Address address = testCafe.getAddress();
+        assertThat(cafeDetailsInformation.getAddress())
+                .isEqualTo(String.join(" ", address.getRoadAddress(), address.getAddressDetail()));
         assertThat(cafeDetailsInformation.getTags()).hasSize(0);
         assertThat(cafeDetailsInformation.getImages()).hasSize(0);
     }

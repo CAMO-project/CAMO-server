@@ -1,4 +1,4 @@
-package team.moca.camo.api;
+package team.moca.camo.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,9 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "kakao")
+@ConfigurationProperties(prefix = "aws")
 @Component
-public class KakaoProperties {
+public class AWSProperties {
 
-    private String apiKey;
+    private String accessKey;
+    private String secretKey;
+    private String bucketName;
 }

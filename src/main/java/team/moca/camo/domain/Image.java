@@ -30,4 +30,8 @@ public class Image extends BaseEntity {
         this();
         this.url = url;
     }
+
+    public static Image of(String imageUrl) {
+        return new Image(imageUrl);
+    }
 }

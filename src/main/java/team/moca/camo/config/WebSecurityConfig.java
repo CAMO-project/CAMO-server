@@ -8,6 +8,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -42,9 +43,11 @@ public class WebSecurityConfig {
                 )
                 .exceptionHandling(
                         exceptionHandling -> exceptionHandling
+                                .defaultAccessDeniedHandlerFor(
+                                        new AccessDeniedHandlerImpl(), new AntPathRequestMatcher("/api/**")
+                                )
                                 .defaultAuthenticationEntryPointFor(
-                                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                                        new AntPathRequestMatcher("/api/**")
+                                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), new AntPathRequestMatcher("/api/**")
                                 )
                 );
 

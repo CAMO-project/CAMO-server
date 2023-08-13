@@ -1,6 +1,5 @@
 package team.moca.camo.common;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -15,10 +14,13 @@ import team.moca.camo.security.jwt.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
-@RequiredArgsConstructor
 public class AuthenticateArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final JwtUtils jwtUtils;
+
+    public AuthenticateArgumentResolver(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {

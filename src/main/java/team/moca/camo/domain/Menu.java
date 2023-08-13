@@ -25,11 +25,14 @@ public class Menu extends BaseEntity {
     @Column(name = "menu_price", nullable = false)
     private int price;
 
-    @Column(name = "image_url", length = 200)
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
     @Column(name = "likes_count", nullable = false)
     private int likesCount;
+
+    @Column(name = "is_signature")
+    private boolean isSignature;
 
     @JoinColumn(name = "cafe_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,6 +44,7 @@ public class Menu extends BaseEntity {
     protected Menu() {
         super(Domain.MENU);
         likesCount = 0;
+        isSignature = false;
     }
 
     @Builder

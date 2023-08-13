@@ -5,6 +5,7 @@ import lombok.Getter;
 import team.moca.camo.domain.embedded.Address;
 import team.moca.camo.domain.value.Domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -54,16 +55,16 @@ public class Cafe extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.REMOVE)
     private List<Menu> menus = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.REMOVE)
     private List<Coupon> coupons = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.REMOVE)
     private List<Favorite> favorites = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.REMOVE)
     private List<Event> events = new ArrayList<>();
 
     @JoinTable(name = "Cafe_Tag",
@@ -72,8 +73,11 @@ public class Cafe extends BaseEntity {
     @ManyToMany
     private List<Tag> tags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.REMOVE)
     private List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.REMOVE)
+    private List<Review> reviews = new ArrayList<>();
 
     protected Cafe() {
         super(Domain.CAFE);

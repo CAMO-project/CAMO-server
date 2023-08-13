@@ -123,6 +123,6 @@ class CafeServiceTest {
         assertThat(cafeDetailsInformation).isNotNull();
         assertThat(cafeDetailsInformation.getCafeId()).isEqualTo(testCafe.getId());
         assertThat(cafeDetailsInformation.getTags()).hasSize(0);
-        assertThat(cafeDetailsInformation.getImagesId()).hasSize(0);
+        assertThat(cafeDetailsInformation.getImages()).hasSize(0);
     }
 }

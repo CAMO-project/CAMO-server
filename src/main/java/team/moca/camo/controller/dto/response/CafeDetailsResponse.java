@@ -21,12 +21,12 @@ public class CafeDetailsResponse {
     private final int userStamps;
     private final int requiredStamps;
     private final List<String> tags;
-    private final List<String> imagesId;
+    private final List<String> images;
     private final boolean isFavorite;
 
     @Builder
     protected CafeDetailsResponse(String cafeId, String cafeName, String address, String contact, String cafeIntroduction,
-                                  int userStamps, int requiredStamps, List<String> tags, List<String> imagesId, boolean isFavorite) {
+                                  int userStamps, int requiredStamps, List<String> tags, List<String> images, boolean isFavorite) {
         this.cafeId = cafeId;
         this.cafeName = cafeName;
         this.address = address;
@@ -35,7 +35,7 @@ public class CafeDetailsResponse {
         this.userStamps = userStamps;
         this.requiredStamps = requiredStamps;
         this.tags = tags;
-        this.imagesId = imagesId;
+        this.images = images;
         this.isFavorite = isFavorite;
     }
 
@@ -52,8 +52,8 @@ public class CafeDetailsResponse {
                 .tags(cafe.getTags().stream()
                         .map(Tag::getTagName)
                         .collect(Collectors.toList()))
-                .imagesId(cafe.getImages().stream()
-                        .map(Image::getId)
+                .images(cafe.getImages().stream()
+                        .map(Image::getUrl)
                         .collect(Collectors.toList()))
                 .isFavorite(isFavorite)
                 .build();

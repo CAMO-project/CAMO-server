@@ -28,7 +28,7 @@ public class MenuService {
     public List<MenuListResponse> getSignatureMenusOfCafe(final String cafeId) {
         Cafe cafe = cafeRepository.findById(cafeId)
                 .orElseThrow(() -> new BusinessException(ClientRequestError.NON_EXISTENT_CAFE));
-        List<Menu> signatureMenus = menuRepository.findByCafeAndSignature(cafe, true);
+        List<Menu> signatureMenus = menuRepository.findByCafeAndIsSignature(cafe, true);
         return signatureMenus.stream()
                 .map(MenuListResponse::of)
                 .collect(Collectors.toList());

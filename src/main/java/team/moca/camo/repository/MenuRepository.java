@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface MenuRepository extends JpaRepository<Menu, String> {
 
-    List<Menu> findByCafeAndSignature(Cafe cafe, boolean isSignature);
+    List<Menu> findByCafeAndIsSignature(Cafe cafe, boolean isSignature);
 }

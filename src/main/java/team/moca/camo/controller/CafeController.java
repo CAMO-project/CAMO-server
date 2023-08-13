@@ -2,8 +2,8 @@ package team.moca.camo.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +32,7 @@ public class CafeController {
     @GetMapping("/nearby")
     public PageResponseDto<List<CafeListResponse>> userNearbyCafeList(
             @Authenticate(required = false) String authenticatedAccountId,
-            @RequestBody Coordinates coordinates, @RequestParam(name = "page", defaultValue = "0") int page
+            @ModelAttribute Coordinates coordinates, @RequestParam(name = "page", defaultValue = "0") int page
     ) {
         PageDto pageDto = PageDto.of(page);
         List<CafeListResponse> nearbyCafeList = cafeService.getNearbyCafeList(coordinates, authenticatedAccountId, pageDto);

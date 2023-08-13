@@ -9,15 +9,17 @@ import lombok.ToString;
 public class Coordinates {
 
     @JsonAlias(value = "y")
-    private double latitude;
+    private final double latitude;
 
     @JsonAlias(value = "x")
-    private double longitude;
+    private final double longitude;
+
+    protected Coordinates(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     public static Coordinates of(double latitude, double longitude) {
-        Coordinates coordinates = new Coordinates();
-        coordinates.latitude = latitude;
-        coordinates.longitude = longitude;
-        return coordinates;
+        return new Coordinates(latitude, longitude);
     }
 }

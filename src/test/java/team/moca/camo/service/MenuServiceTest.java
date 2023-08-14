@@ -11,8 +11,10 @@ import team.moca.camo.TestUtils;
 import team.moca.camo.controller.dto.response.MenuListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Menu;
+import team.moca.camo.domain.User;
 import team.moca.camo.repository.CafeRepository;
 import team.moca.camo.repository.MenuRepository;
+import team.moca.camo.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,19 +36,23 @@ class MenuServiceTest {
     private MenuRepository menuRepository;
     @Mock
     private CafeRepository cafeRepository;
+    @Mock
+    private UserRepository userRepository;
 
     @DisplayName("카페 ID를 통해 해당 카페의 대표 메뉴를 조회할 수 있다.")
     @Test
     void signatureMenusOfCafeSuccess() throws Exception {
         // given
+        User testUser = TestUtils.getTestUserInstance();
         Cafe testCafe = TestUtils.getTestCafeInstance();
 
         // when
+        when(userRepository.findWithLikeMenusById(testUser.getId())).thenReturn(Optional.of(testUser));
         when(cafeRepository.findById(testCafe.getId())).thenReturn(Optional.of(testCafe));
         Menu testMenu = Menu.builder().name("test menu 1").price(10_000).build();
         when(menuRepository.findByCafeAndIsSignature(eq(testCafe), any(Boolean.class)))
                 .thenReturn(List.of(testMenu, Menu.builder().name("test menu 2").price(5_000).build()));
-        List<MenuListResponse> signatureMenus = menuService.getSignatureMenuListOfCafe(testCafe.getId());
+        List<MenuListResponse> signatureMenus = menuService.getSignatureMenuListOfCafe(testCafe.getId(), testUser.getId());
 
         // then
         assertThat(signatureMenus).isNotNull();

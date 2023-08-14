@@ -19,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @EntityGraph(value = EntityGraphNames.USER_FAVORITE_CAFES)
     Optional<User> findWithFavoriteCafesById(String id);
+
+    @EntityGraph(value = EntityGraphNames.USER_LIKE_MENUS)
+    Optional<User> findWithLikeMenusById(String id);
 }

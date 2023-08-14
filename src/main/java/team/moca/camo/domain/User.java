@@ -43,6 +43,15 @@ import static java.util.stream.Collectors.toList;
                         subgraphs = {
                                 @NamedSubgraph(name = "Favorite.cafe", attributeNodes = @NamedAttributeNode(value = "cafe"))
                         }
+                ),
+                @NamedEntityGraph(
+                        name = EntityGraphNames.USER_LIKE_MENUS,
+                        attributeNodes = {
+                                @NamedAttributeNode(value = "likes", subgraph = "Like.menu")
+                        },
+                        subgraphs = {
+                                @NamedSubgraph(name = "Like.menu", attributeNodes = @NamedAttributeNode(value = "menu"))
+                        }
                 )
         }
 )
@@ -90,6 +99,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "writer")
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Like> likes = new ArrayList<>();
 
     protected User() {
         super(Domain.USER);

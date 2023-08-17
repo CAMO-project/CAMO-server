@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import team.moca.camo.TestUtils;
+import team.moca.camo.TestInstanceFactory;
 import team.moca.camo.api.KakaoAuthApiService;
 import team.moca.camo.controller.dto.response.LoginResponse;
 import team.moca.camo.domain.User;
@@ -45,7 +45,7 @@ public class KakaoAuthServiceTest {
     @Test
     void integrateKakaoAccountWithEmailAccountSuccess() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
 
         // when
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
@@ -63,7 +63,7 @@ public class KakaoAuthServiceTest {
     @Test
     void integrateKakaoAccountWithEmailAccountFailUnauthenticatedUser() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
 
         // when
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.empty());
@@ -77,7 +77,7 @@ public class KakaoAuthServiceTest {
     @Test
     void integrateKakaoAccountWithEmailAccountFailInvalidKakaoToken() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
 
         // when
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
@@ -93,7 +93,7 @@ public class KakaoAuthServiceTest {
     @Test
     void loginWithKakaoAccountSuccess() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
 
         // when
         when(kakaoAuthApiService.getKakaoAccountId(anyString())).thenReturn(testUser.getKakaoId());
@@ -112,7 +112,7 @@ public class KakaoAuthServiceTest {
     @Test
     void loginWithKakaoAccountFailKakaoAccountDoNotIntegrated() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
 
         // when
         when(kakaoAuthApiService.getKakaoAccountId(anyString())).thenReturn(testUser.getKakaoId());
@@ -126,7 +126,7 @@ public class KakaoAuthServiceTest {
     @Test
     void loginWithKakaoAccountFailInvalidKakaoToken() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
 
         // when
         when(kakaoAuthApiService.getKakaoAccountId(anyString()))

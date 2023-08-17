@@ -6,11 +6,11 @@ import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.User;
 import team.moca.camo.domain.embedded.Address;
 
-public class TestUtils {
+public class TestInstanceFactory {
 
     private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
-    private TestUtils() {
+    private TestInstanceFactory() {
     }
 
     private static final User USER_INSTANCE = User.builder()

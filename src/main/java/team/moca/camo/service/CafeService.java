@@ -120,11 +120,10 @@ public class CafeService {
             final Coordinates userCoordinates, final List<String> filterTags,
             final User requestUser, final PageDto page
     ) {
-        List<String> nearbyCafeIdList = getNearbyCafeIdList(userCoordinates);
-
         Page<Location> cafesLocation;
         PageRequest pageRequest = PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE);
         if (filterTags != null) {
+            List<String> nearbyCafeIdList = getNearbyCafeIdList(userCoordinates);
             List<String> filteredCafeIdList = getFilteredCafeIdList(nearbyCafeIdList, filterTags);
             cafesLocation = cafeLocationRepository.findByIdInAndCoordinatesNear(
                     filteredCafeIdList, new Point(userCoordinates.getLongitude(), userCoordinates.getLatitude()),

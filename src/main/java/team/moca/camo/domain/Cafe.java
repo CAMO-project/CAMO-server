@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import team.moca.camo.domain.embedded.Address;
 import team.moca.camo.domain.value.Domain;
+import team.moca.camo.exception.BusinessException;
+import team.moca.camo.exception.error.ClientRequestError;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -97,5 +99,22 @@ public class Cafe extends BaseEntity {
         this.requiredStamps = requiredStamps;
         this.address = address;
         this.businessRegistrationNumber = businessRegistrationNumber;
+    }
+
+    public void registerBy(User owner) {
+        this.owner = owner;
+        owner.getCafes().add(this);
+    }
+
+    public void addTag(Tag tag) {
+        if (this.tags.size() >= 3) {
+            throw new BusinessException(ClientRequestError.TAGS_MAXIMUM_NUMBER_EXCEEDS);
+        }
+        if (this.tags.contains(tag)) {
+            throw new BusinessException(ClientRequestError.DUPLICATE_TAGS);
+        }
+
+        this.tags.add(tag);
+        tag.getCafes().add(this);
     }
 }

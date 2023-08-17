@@ -7,13 +7,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import team.moca.camo.TestUtils;
+import team.moca.camo.TestInstanceFactory;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.User;
 import team.moca.camo.repository.CouponRepository;
 
 @Slf4j
-@DisplayName("카페 서비스 테스트")
+@DisplayName("쿠폰 서비스 테스트")
 @ExtendWith(value = MockitoExtension.class)
 class CouponServiceTest {
 
@@ -27,8 +27,8 @@ class CouponServiceTest {
     @Test
     void getUserStampsCountForCafeSuccess() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
-        Cafe testCafe = TestUtils.getTestCafeInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
+        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
 
         // when
 

@@ -2,7 +2,8 @@ package team.moca.camo.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.moca.camo.controller.dto.response.ReviewListResponse;
+import team.moca.camo.controller.dto.response.ReviewListDto;
+import team.moca.camo.controller.dto.response.ReviewsResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Review;
 import team.moca.camo.exception.BusinessException;
@@ -25,12 +26,14 @@ public class ReviewService {
         this.cafeRepository = cafeRepository;
     }
 
-    public List<ReviewListResponse> getReviewListOfCafe(final String cafeId) {
+    public ReviewsResponse getReviewListOfCafe(final String cafeId) {
         Cafe cafe = cafeRepository.findById(cafeId)
                 .orElseThrow(() -> new BusinessException(ClientRequestError.NON_EXISTENT_CAFE));
         List<Review> reviews = reviewRepository.findByCafe(cafe);
-        return reviews.stream()
-                .map(ReviewListResponse::of)
+
+        List<ReviewListDto> reviewList = reviews.stream()
+                .map(ReviewListDto::of)
                 .collect(Collectors.toList());
+        return ReviewsResponse.of(reviewList, cafe.getRatingAverage());
     }
 }

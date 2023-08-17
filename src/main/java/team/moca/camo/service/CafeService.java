@@ -1,5 +1,6 @@
 package team.moca.camo.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -8,8 +9,6 @@ import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.moca.camo.api.KakaoLocalApiService;
-import team.moca.camo.api.dto.KakaoAddressResponse;
 import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.response.CafeDetailsResponse;
 import team.moca.camo.controller.dto.response.CafeListResponse;
@@ -24,10 +23,12 @@ import team.moca.camo.exception.error.ClientRequestError;
 import team.moca.camo.repository.CafeLocationRepository;
 import team.moca.camo.repository.CafeRepository;
 import team.moca.camo.repository.UserRepository;
+import team.moca.camo.repository.projection.CafeIdProjection;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Transactional(readOnly = true)
 @Service
 public class CafeService {
@@ -40,15 +41,13 @@ public class CafeService {
     private final UserRepository userRepository;
     private final CouponService couponService;
     private final AuthenticationUserFactory authenticationUserFactory;
-    private final KakaoLocalApiService kakaoLocalApiService;
 
-    public CafeService(CafeRepository cafeRepository, CafeLocationRepository cafeLocationRepository, UserRepository userRepository, CouponService couponService, AuthenticationUserFactory authenticationUserFactory, KakaoLocalApiService kakaoLocalApiService) {
+    public CafeService(CafeRepository cafeRepository, CafeLocationRepository cafeLocationRepository, UserRepository userRepository, CouponService couponService, AuthenticationUserFactory authenticationUserFactory) {
         this.cafeRepository = cafeRepository;
         this.cafeLocationRepository = cafeLocationRepository;
         this.userRepository = userRepository;
         this.couponService = couponService;
         this.authenticationUserFactory = authenticationUserFactory;
-        this.kakaoLocalApiService = kakaoLocalApiService;
     }
 
     public List<CafeListResponse> getNearbyCafeList(
@@ -64,6 +63,14 @@ public class CafeService {
         return getCafeListOrderByDistance(nearbyCafesLocation, requestUser);
     }
 
+    private Page<Location> getNearbyCafesLocation(final Coordinates userCoordinates, final PageDto page) {
+        PageRequest pageRequest = PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE);
+        return cafeLocationRepository.findByCoordinatesNear(
+                new Point(userCoordinates.getLongitude(), userCoordinates.getLatitude()),
+                new Distance(CafeService.NEARBY_DISTANCE_KILOMETERS, Metrics.KILOMETERS), pageRequest
+        );
+    }
+
     public CafeDetailsResponse getCafeDetailsInformation(final String cafeId, final String authenticatedAccountId) {
         User requestUser =
                 authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(
@@ -74,13 +81,14 @@ public class CafeService {
 
         int userStamps = couponService.getUserStampsCountForCafe(requestUser, cafe);
         boolean isFavorite = isFavoriteByUser(requestUser, cafe);
+        boolean isOwner = isOwnerOfCafe(requestUser, cafe);
 
-        return CafeDetailsResponse.of(cafe, userStamps, isFavorite);
+        return CafeDetailsResponse.of(cafe, userStamps, isFavorite, isOwner);
     }
 
-    public List<CafeListResponse> getSortedCafeList(
+    public List<CafeListResponse> getSortedAndFilteredCafeList(
             final Coordinates userCoordinates, final SortType sortType,
-            final String authenticatedAccountId, final PageDto page
+            final List<String> filterTags, final String authenticatedAccountId, final PageDto page
     ) {
         User requestUser =
                 authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(
@@ -89,22 +97,76 @@ public class CafeService {
 
         switch (sortType) {
             case DISTANCE: {
-                Page<Location> nearbyCafesLocation = getNearbyCafesLocation(userCoordinates, page);
+                Page<Location> nearbyCafesLocation;
+                if (filterTags != null) {
+                    List<String> filteredCafeIdList = cafeRepository.findByTagsIdIn(filterTags).stream()
+                            .map(CafeIdProjection::getId)
+                            .collect(Collectors.toList());
+                    nearbyCafesLocation = getNearbyCafesLocation(filteredCafeIdList, userCoordinates, page);
+                } else {
+                    nearbyCafesLocation = getNearbyCafesLocation(userCoordinates, page);
+                }
+
                 page.updateTotalPages(nearbyCafesLocation.getTotalPages());
                 return getCafeListOrderByDistance(nearbyCafesLocation, requestUser);
             }
             case RATING: {
-                KakaoAddressResponse userAddress = kakaoLocalApiService.coordinatesToAddress(userCoordinates);
-                return getCafeListOrderByRating(userAddress.getRegion2depthName(), requestUser, page);
+                List<String> nearbyCafeIdList = getNearbyCafeIdList(userCoordinates);
+                PageRequest pageRequest =
+                        PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE, Sort.by(SortType.RATING.getSortPropertyName()));
+
+                return getCafeListResponses(filterTags, page, requestUser, nearbyCafeIdList, pageRequest);
             }
             case FAVORITE: {
-                KakaoAddressResponse userAddress = kakaoLocalApiService.coordinatesToAddress(userCoordinates);
-                return getCafeListOrderByFavoritesCount(userAddress.getRegion2depthName(), requestUser, page);
+                List<String> nearbyCafeIdList = getNearbyCafeIdList(userCoordinates);
+                PageRequest pageRequest =
+                        PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE, Sort.by(SortType.FAVORITE.getSortPropertyName()));
+
+                return getCafeListResponses(filterTags, page, requestUser, nearbyCafeIdList, pageRequest);
             }
             default: {
                 return null;
             }
         }
+    }
+
+    private List<CafeListResponse> getCafeListResponses(
+            final List<String> filterTags, final PageDto page, final User requestUser,
+            final List<String> nearbyCafeIdList, final PageRequest pageRequest
+    ) {
+        Page<Cafe> cafes;
+        if (filterTags != null) {
+            cafes = cafeRepository.findDistinctByIdInAndTagsIdIn(nearbyCafeIdList, filterTags, pageRequest);
+        } else {
+            cafes = cafeRepository.findByIdIn(nearbyCafeIdList, pageRequest);
+        }
+        page.updateTotalPages(cafes.getTotalPages());
+        return cafes.stream()
+                .map(cafe -> {
+                    boolean isFavorite = isFavoriteByUser(requestUser, cafe);
+                    return CafeListResponse.of(cafe, isFavorite);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getNearbyCafeIdList(final Coordinates userCoordinates) {
+        List<Location> nearbyCafesLocation = cafeLocationRepository.findByCoordinatesNear(
+                new Point(userCoordinates.getLongitude(), userCoordinates.getLatitude()),
+                new Distance(NEARBY_DISTANCE_KILOMETERS, Metrics.KILOMETERS)
+        );
+        return nearbyCafesLocation.stream()
+                .map(Location::getId)
+                .collect(Collectors.toList());
+    }
+
+    private Page<Location> getNearbyCafesLocation(
+            final List<String> filteredCafeIdList, final Coordinates userCoordinates, final PageDto page
+    ) {
+        PageRequest pageRequest = PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE);
+        return cafeLocationRepository.findByIdInAndCoordinatesNear(
+                filteredCafeIdList, new Point(userCoordinates.getLongitude(), userCoordinates.getLatitude()),
+                new Distance(CafeService.NEARBY_DISTANCE_KILOMETERS, Metrics.KILOMETERS), pageRequest
+        );
     }
 
     private List<CafeListResponse> getCafeListOrderByDistance(final Page<Location> cafesLocation, final User requestUser) {
@@ -119,38 +181,13 @@ public class CafeService {
                 .collect(Collectors.toList());
     }
 
-    private Page<Location> getNearbyCafesLocation(final Coordinates userCoordinates, final PageDto page) {
-        PageRequest pageRequest = PageRequest.of(page.getNowPage(), DEFAULT_PAGE_LIST_SIZE);
-        return cafeLocationRepository.findByCoordinatesNear(
-                new Point(userCoordinates.getLongitude(), userCoordinates.getLatitude()),
-                new Distance(CafeService.NEARBY_DISTANCE_KILOMETERS, Metrics.KILOMETERS), pageRequest
-        );
-    }
-
-    private List<CafeListResponse> getCafeListOrderByRating(final String userCity, final User requestUser, final PageDto page) {
-        return getSortedCafePage(SortType.RATING, userCity, page).stream()
-                .map(cafe -> CafeListResponse.of(cafe, isFavoriteByUser(requestUser, cafe)))
-                .collect(Collectors.toList());
-    }
-
-    private List<CafeListResponse> getCafeListOrderByFavoritesCount(final String userCity, final User requestUser, final PageDto page) {
-        return getSortedCafePage(SortType.FAVORITE, userCity, page).stream()
-                .map(cafe -> CafeListResponse.of(cafe, isFavoriteByUser(requestUser, cafe)))
-                .collect(Collectors.toList());
-    }
-
-    private Page<Cafe> getSortedCafePage(final SortType sortType, final String userCity, final PageDto page) {
-        Sort sort = Sort.by(Sort.Direction.DESC, sortType.getSortPropertyName());
-        PageRequest pageRequest = PageRequest.of(page.getNowPage(), DEFAULT_PAGE_LIST_SIZE, sort);
-
-        Page<Cafe> userTownCafes = cafeRepository.findByCity(userCity, pageRequest);
-        page.updateTotalPages(userTownCafes.getTotalPages());
-        return userTownCafes;
-    }
-
     private boolean isFavoriteByUser(final User user, final Cafe cafe) {
         List<Favorite> favorites = user.getFavorites();
         return favorites.stream()
                 .anyMatch(favorite -> favorite.getCafe().equals(cafe));
+    }
+
+    private boolean isOwnerOfCafe(final User requestUser, final Cafe cafe) {
+        return cafe.getOwner().equals(requestUser);
     }
 }

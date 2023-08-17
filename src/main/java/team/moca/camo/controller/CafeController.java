@@ -52,15 +52,16 @@ public class CafeController {
     }
 
     @GetMapping("")
-    public PageResponseDto<List<CafeListResponse>> cafeListOrderByDistance(
+    public PageResponseDto<List<CafeListResponse>> sortedAndFilteredCafeList(
             @Authenticate(required = false) String authenticatedAccountId,
             @ModelAttribute Coordinates coordinates,
             @RequestParam(name = "sort", defaultValue = "RATING") SortType sortType,
+            @RequestParam(name = "filter", required = false) List<String> filterTags,
             @RequestParam(name = "page", defaultValue = "0") int page
     ) {
         PageDto pageDto = PageDto.of(page);
         List<CafeListResponse> sortedCafeList =
-                cafeService.getSortedCafeList(coordinates, sortType, authenticatedAccountId, pageDto);
+                cafeService.getSortedAndFilteredCafeList(coordinates, sortType, filterTags, authenticatedAccountId, pageDto);
         return PageResponseDto.of(sortedCafeList, String.format("Cafe list sorted by %s", sortType.getSortPropertyName()), pageDto);
     }
 }

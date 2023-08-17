@@ -18,28 +18,33 @@ public class CafeDetailsResponse {
     private final String address;
     private final String contact;
     private final String cafeIntroduction;
+    private final String reward;
     private final int userStamps;
     private final int requiredStamps;
     private final List<String> tags;
     private final List<String> images;
     private final boolean isFavorite;
+    private final boolean isOwner;
 
     @Builder
-    protected CafeDetailsResponse(String cafeId, String cafeName, String address, String contact, String cafeIntroduction,
-                                  int userStamps, int requiredStamps, List<String> tags, List<String> images, boolean isFavorite) {
+    protected CafeDetailsResponse(
+            String cafeId, String cafeName, String address, String contact, String cafeIntroduction,
+            String reward, int userStamps, int requiredStamps, List<String> tags, List<String> images, boolean isFavorite, boolean isOwner) {
         this.cafeId = cafeId;
         this.cafeName = cafeName;
         this.address = address;
         this.contact = contact;
         this.cafeIntroduction = cafeIntroduction;
+        this.reward = reward;
         this.userStamps = userStamps;
         this.requiredStamps = requiredStamps;
         this.tags = tags;
         this.images = images;
         this.isFavorite = isFavorite;
+        this.isOwner = isOwner;
     }
 
-    public static CafeDetailsResponse of(Cafe cafe, int userStamps, boolean isFavorite) {
+    public static CafeDetailsResponse of(Cafe cafe, int userStamps, boolean isFavorite, boolean isOwner) {
         Address address = cafe.getAddress();
         return CafeDetailsResponse.builder()
                 .cafeId(cafe.getId())
@@ -47,6 +52,7 @@ public class CafeDetailsResponse {
                 .address(String.join(" ", address.getRoadAddress(), address.getAddressDetail()))
                 .contact(cafe.getContact())
                 .cafeIntroduction(cafe.getIntroduction())
+                .reward(cafe.getReward())
                 .userStamps(userStamps)
                 .requiredStamps(cafe.getRequiredStamps())
                 .tags(cafe.getTags().stream()
@@ -56,6 +62,7 @@ public class CafeDetailsResponse {
                         .map(Image::getUrl)
                         .collect(Collectors.toList()))
                 .isFavorite(isFavorite)
+                .isOwner(isOwner)
                 .build();
     }
 }

@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS Cafe
     rating_average               DOUBLE        NOT NULL,
     favorites_count              INT           NOT NULL,
     business_registration_number VARCHAR(15)   NOT NULL,
-    is_signature                 BOOLEAN DEFAULT FALSE,
     created_at                   DATETIME(6)   NOT NULL,
     updated_at                   DATETIME(6),
     user_id                      VARCHAR(50)   NOT NULL,
@@ -72,14 +71,15 @@ CREATE TABLE IF NOT EXISTS Image
 
 CREATE TABLE IF NOT EXISTS Menu
 (
-    id          VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
-    menu_name   VARCHAR(20) NOT NULL,
-    menu_price  INT         NOT NULL,
-    image_url   VARCHAR(500),
-    likes_count INT         NOT NULL,
-    cafe_id     VARCHAR(50) NOT NULL,
-    created_at  DATETIME(6) NOT NULL,
-    updated_at  DATETIME(6),
+    id           VARCHAR(50) NOT NULL UNIQUE PRIMARY KEY,
+    menu_name    VARCHAR(20) NOT NULL,
+    menu_price   INT         NOT NULL,
+    image_url    VARCHAR(500),
+    likes_count  INT         NOT NULL,
+    is_signature BOOLEAN DEFAULT TRUE,
+    cafe_id      VARCHAR(50) NOT NULL,
+    created_at   DATETIME(6) NOT NULL,
+    updated_at   DATETIME(6),
     FOREIGN KEY (cafe_id) REFERENCES Cafe (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 

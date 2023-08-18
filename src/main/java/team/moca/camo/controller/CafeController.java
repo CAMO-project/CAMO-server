@@ -1,19 +1,18 @@
 package team.moca.camo.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import team.moca.camo.common.annotation.Authenticate;
 import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.PageResponseDto;
 import team.moca.camo.controller.dto.ResponseDto;
 import team.moca.camo.controller.dto.response.CafeDetailsResponse;
 import team.moca.camo.controller.dto.response.CafeListResponse;
+import team.moca.camo.domain.Cafe;
+import team.moca.camo.domain.User;
 import team.moca.camo.domain.value.Coordinates;
+import team.moca.camo.repository.CafeRepository;
 import team.moca.camo.service.CafeService;
 
 import java.util.List;
@@ -24,6 +23,9 @@ import java.util.List;
 public class CafeController {
 
     private final CafeService cafeService;
+
+    @Autowired
+    private CafeRepository cafeRepository;
 
     public CafeController(CafeService cafeService) {
         this.cafeService = cafeService;
@@ -49,4 +51,19 @@ public class CafeController {
         log.info("Cafe details information of [{}]", cafeId);
         return ResponseDto.of(cafeDetailsResponse, String.format("Cafe details information of [%s]", cafeId));
     }
+
+//    @PostMapping("/new")
+//    public void RegisterCafe(@RequestBody CafeRequest cafeRequest) {
+//        cafeService.createCafe(cafeRequest);
+//    }
+//
+//    @PutMapping("/update/{id}")
+//    public void updateCafe(@PathVariable("id") String cafeId, @RequestBody CafeRequest cafeRequest, User owner) {
+//        cafeService.updateCafe(cafeId, cafeRequest, owner);
+//    }
+//
+//    @DeleteMapping("/delete/{id}")
+//    public void deleteCafe(@PathVariable("id") String cafeId, User owner) {
+//        cafeService.deleteCafe(cafeId, owner);
+//    }
 }

@@ -25,6 +25,7 @@ import team.moca.camo.domain.Tag;
 import team.moca.camo.domain.User;
 import team.moca.camo.domain.embedded.Address;
 import team.moca.camo.domain.value.Coordinates;
+import team.moca.camo.exception.BusinessException;
 import team.moca.camo.repository.CafeLocationRepository;
 import team.moca.camo.repository.CafeRepository;
 import team.moca.camo.repository.UserRepository;
@@ -153,7 +154,8 @@ class CafeServiceTest {
         when(cafeRepository.findById(anyString())).thenReturn(Optional.empty());
 
         // then
-        assertThatThrownBy(() -> cafeService.getCafeDetailsInformation(testCafe.getId(), testUser.getId()));
+        assertThatThrownBy(() -> cafeService.getCafeDetailsInformation(testCafe.getId(), testUser.getId()))
+                .isInstanceOf(BusinessException.class);
     }
 
     @DisplayName("카페 목록을 정렬하여 조회할 수 있다.")

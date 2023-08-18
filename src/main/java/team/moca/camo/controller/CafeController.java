@@ -55,7 +55,7 @@ public class CafeController {
     public PageResponseDto<List<CafeListResponse>> sortedAndFilteredCafeList(
             @Authenticate(required = false) String authenticatedAccountId,
             @ModelAttribute Coordinates coordinates,
-            @RequestParam(name = "sort", defaultValue = "RATING") SortType sortType,
+            @RequestParam(name = "sort", defaultValue = "DISTANCE") SortType sortType,
             @RequestParam(name = "filter", required = false) List<String> filterTags,
             @RequestParam(name = "page", defaultValue = "0") int page
     ) {

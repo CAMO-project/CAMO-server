@@ -123,8 +123,7 @@ public class CafeService {
         Page<Location> cafesLocation;
         PageRequest pageRequest = PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE);
         if (filterTags != null) {
-            List<String> nearbyCafeIdList = getNearbyCafeIdList(userCoordinates);
-            List<String> filteredCafeIdList = getFilteredCafeIdList(nearbyCafeIdList, filterTags);
+            List<String> filteredCafeIdList = getFilteredCafeIdList(userCoordinates, filterTags);
             cafesLocation = cafeLocationRepository.findByIdInAndCoordinatesNear(
                     filteredCafeIdList, new Point(userCoordinates.getLongitude(), userCoordinates.getLatitude()),
                     new Distance(NEARBY_DISTANCE_KILOMETERS, Metrics.KILOMETERS), pageRequest
@@ -141,7 +140,8 @@ public class CafeService {
         return convertToCafeListResponse(sortedAndFilteredCafes, requestUser);
     }
 
-    private List<String> getFilteredCafeIdList(final List<String> nearbyCafeIdList, final List<String> filterTags) {
+    private List<String> getFilteredCafeIdList(final Coordinates userCoordinates, final List<String> filterTags) {
+        List<String> nearbyCafeIdList = getNearbyCafeIdList(userCoordinates);
         PageRequest pageRequest = PageRequest.of(START_PAGE, INFINITY_PAGE);
         Page<Cafe> filteredCafes =
                 cafeRepository.findDistinctByIdInAndTagsIdIn(nearbyCafeIdList, filterTags, pageRequest);

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import team.moca.camo.TestUtils;
+import team.moca.camo.TestInstanceFactory;
 import team.moca.camo.config.ObjectMapperConfig;
 import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.response.CafeListResponse;
@@ -51,8 +51,8 @@ class CafeControllerTest {
     @Test
     void nearbyCafeListSuccess() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
-        Cafe testCafe = TestUtils.getTestCafeInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
+        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
         double latitude = 37.12345678;
         double longitude = 127.12345678;
 
@@ -82,7 +82,7 @@ class CafeControllerTest {
     @Test
     void nearbyCafeListGuestUserSuccess() throws Exception {
         // given
-        Cafe testCafe = TestUtils.getTestCafeInstance();
+        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
         double latitude = 37.12345678;
         double longitude = 127.12345678;
 
@@ -111,8 +111,8 @@ class CafeControllerTest {
     @Test
     void nearbyCafeListFailWhenMissingCoordinates() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
-        Cafe testCafe = TestUtils.getTestCafeInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
+        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
         double latitude = 37.12345678;
         double longitude = 127.12345678;
 

@@ -3,7 +3,7 @@ package team.moca.camo.security.jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import team.moca.camo.TestUtils;
+import team.moca.camo.TestInstanceFactory;
 import team.moca.camo.domain.User;
 import team.moca.camo.security.mock.MockJwtProperties;
 
@@ -21,7 +21,7 @@ class JwtUtilsTest {
     @Test
     void generateJWT() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         log.info("testUser.id = {}", testUser.getId());
 
         // when
@@ -37,7 +37,7 @@ class JwtUtilsTest {
     @Test
     void normalJWTSuccessValidation() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
 
         // when
@@ -51,7 +51,7 @@ class JwtUtilsTest {
     @Test
     void expiredJWTFailValidation() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMillis(10));
         Thread.sleep(100);
 
@@ -66,7 +66,7 @@ class JwtUtilsTest {
     @Test
     void modifiedJWTFailValidation() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
         token += "m";
 

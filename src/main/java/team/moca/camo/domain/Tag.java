@@ -30,7 +30,7 @@ public class Tag extends BaseEntity {
         super(Domain.TAG);
     }
 
-    protected Tag(String tagName) {
+    public Tag(String tagName) {
         this();
         this.tagName = tagName;
     }

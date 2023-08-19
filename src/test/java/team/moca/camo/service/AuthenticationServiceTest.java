@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import team.moca.camo.TestUtils;
+import team.moca.camo.TestInstanceFactory;
 import team.moca.camo.controller.dto.request.LoginRequest;
 import team.moca.camo.controller.dto.request.SignUpRequest;
 import team.moca.camo.controller.dto.response.LoginResponse;
@@ -42,7 +42,7 @@ class AuthenticationServiceTest {
     @Test
     void issueNewAccessTokenValidRefreshToken() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         userRepository.save(testUser);
 
         // when
@@ -60,7 +60,7 @@ class AuthenticationServiceTest {
     @Test
     void failIssueNewAccessTokenExpiredRefreshToken() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         userRepository.save(testUser);
 
         // when
@@ -99,7 +99,7 @@ class AuthenticationServiceTest {
     @Test
     void failCreateNewEmailAccountWhenEmailDuplicate() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         userRepository.save(testUser);
 
         // when
@@ -119,7 +119,7 @@ class AuthenticationServiceTest {
     @Test
     void failCreateNewEmailAccountWhenPhoneNumberDuplicate() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         userRepository.save(testUser);
 
         // when
@@ -139,7 +139,7 @@ class AuthenticationServiceTest {
     @Test
     void failCreateNewEmailAccountWhenNicknameDuplicate() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         userRepository.save(testUser);
 
         // when
@@ -177,7 +177,7 @@ class AuthenticationServiceTest {
     @Test
     void loginSuccessAccessTokenAndRefreshTokenIssued() throws Exception {
         // given
-        User user = TestUtils.getTestUserInstance();
+        User user = TestInstanceFactory.getTestUserInstance();
         userRepository.save(user);
 
         // when
@@ -199,7 +199,7 @@ class AuthenticationServiceTest {
     @Test
     void loginFailNonExistEmail() throws Exception {
         // given
-        User user = TestUtils.getTestUserInstance();
+        User user = TestInstanceFactory.getTestUserInstance();
         userRepository.save(user);
 
         // when
@@ -216,7 +216,7 @@ class AuthenticationServiceTest {
     @Test
     void loginFailInvalidPassword() throws Exception {
         // given
-        User user = TestUtils.getTestUserInstance();
+        User user = TestInstanceFactory.getTestUserInstance();
         userRepository.save(user);
 
         // when

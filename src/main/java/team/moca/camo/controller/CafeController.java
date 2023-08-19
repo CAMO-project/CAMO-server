@@ -13,6 +13,7 @@ import team.moca.camo.controller.dto.PageResponseDto;
 import team.moca.camo.controller.dto.ResponseDto;
 import team.moca.camo.controller.dto.response.CafeDetailsResponse;
 import team.moca.camo.controller.dto.response.CafeListResponse;
+import team.moca.camo.controller.dto.value.SortType;
 import team.moca.camo.domain.value.Coordinates;
 import team.moca.camo.service.CafeService;
 
@@ -48,5 +49,19 @@ public class CafeController {
                 cafeService.getCafeDetailsInformation(cafeId, authenticatedAccountId);
         log.info("Cafe details information of [{}]", cafeId);
         return ResponseDto.of(cafeDetailsResponse, String.format("Cafe details information of [%s]", cafeId));
+    }
+
+    @GetMapping("")
+    public PageResponseDto<List<CafeListResponse>> sortedAndFilteredCafeList(
+            @Authenticate(required = false) String authenticatedAccountId,
+            @ModelAttribute Coordinates coordinates,
+            @RequestParam(name = "sort", defaultValue = "DISTANCE") SortType sortType,
+            @RequestParam(name = "filter", required = false) List<String> filterTags,
+            @RequestParam(name = "page", defaultValue = "0") int page
+    ) {
+        PageDto pageDto = PageDto.of(page);
+        List<CafeListResponse> sortedCafeList =
+                cafeService.getSortedAndFilteredCafeList(coordinates, sortType, filterTags, authenticatedAccountId, pageDto);
+        return PageResponseDto.of(sortedCafeList, String.format("Cafe list sorted by %s", sortType.getSortPropertyName()), pageDto);
     }
 }

@@ -3,7 +3,7 @@ package team.moca.camo.security.jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import team.moca.camo.TestUtils;
+import team.moca.camo.TestInstanceFactory;
 import team.moca.camo.domain.User;
 import team.moca.camo.security.mock.MockFilterChain;
 import team.moca.camo.security.mock.MockHttpServletRequest;
@@ -23,7 +23,7 @@ public class JwtAuthenticationFilterTest {
     @Test
     void passFilterValidJWT() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
 
         // when

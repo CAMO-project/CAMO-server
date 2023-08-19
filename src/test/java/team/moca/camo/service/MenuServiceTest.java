@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import team.moca.camo.TestUtils;
+import team.moca.camo.TestInstanceFactory;
 import team.moca.camo.controller.dto.response.MenuListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Menu;
@@ -18,6 +18,7 @@ import team.moca.camo.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,16 +39,19 @@ class MenuServiceTest {
     private CafeRepository cafeRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private AuthenticationUserFactory authenticationUserFactory;
 
     @DisplayName("카페 ID를 통해 해당 카페의 대표 메뉴를 조회할 수 있다.")
     @Test
     void signatureMenusOfCafeSuccess() throws Exception {
         // given
-        User testUser = TestUtils.getTestUserInstance();
-        Cafe testCafe = TestUtils.getTestCafeInstance();
+        User testUser = TestInstanceFactory.getTestUserInstance();
+        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
 
         // when
-        when(userRepository.findWithLikeMenusById(testUser.getId())).thenReturn(Optional.of(testUser));
+        when(authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(eq(testUser.getId()), any(Function.class)))
+                .thenReturn(testUser);
         when(cafeRepository.findById(testCafe.getId())).thenReturn(Optional.of(testCafe));
         Menu testMenu = Menu.builder().name("test menu 1").price(10_000).build();
         when(menuRepository.findByCafeAndIsSignature(eq(testCafe), any(Boolean.class)))

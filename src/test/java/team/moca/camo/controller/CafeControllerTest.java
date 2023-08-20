@@ -57,6 +57,7 @@ class CafeControllerTest {
         double longitude = 127.12345678;
 
         // when
+        when(jwtUtils.isValidToken(anyString())).thenReturn(true);
         when(jwtUtils.extractAccountIdFromToken(anyString())).thenReturn(testUser.getId());
         when(cafeService.getNearbyCafeList(any(Coordinates.class), any(String.class), any(PageDto.class)))
                 .thenReturn(List.of(CafeListResponse.of(testCafe, true)));

@@ -35,12 +35,11 @@ public class AuthenticateArgumentResolver implements HandlerMethodArgumentResolv
     ) throws Exception {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String token = getTokenFromRequestHeader(request);
-        if (jwtUtils.isValidToken(token)) {
-            return jwtUtils.extractAccountIdFromToken(token);
+        if (!jwtUtils.isValidToken(token)) {
+            checkRequired(parameter);
+            return null;
         }
-
-        checkRequired(parameter);
-        return null;
+        return jwtUtils.extractAccountIdFromToken(token);
     }
 
     private String getTokenFromRequestHeader(HttpServletRequest request) {

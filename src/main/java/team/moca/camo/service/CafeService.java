@@ -155,7 +155,8 @@ public class CafeService {
             final User requestUser, final PageDto page
     ) {
         PageRequest pageRequest =
-                PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE, Sort.by(SortType.RATING.getSortPropertyName()));
+                PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE,
+                        Sort.by(Sort.Direction.DESC, SortType.RATING.getSortPropertyName()));
         return getSortedAndFilteredCafes(userCoordinates, filterTags, requestUser, page, pageRequest);
     }
 
@@ -164,7 +165,8 @@ public class CafeService {
             final User requestUser, final PageDto page
     ) {
         PageRequest pageRequest =
-                PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE, Sort.by(SortType.FAVORITE.getSortPropertyName()));
+                PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE,
+                        Sort.by(Sort.Direction.DESC, SortType.FAVORITE.getSortPropertyName()));
         return getSortedAndFilteredCafes(userCoordinates, filterTags, requestUser, page, pageRequest);
     }
 

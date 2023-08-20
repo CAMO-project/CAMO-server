@@ -1,7 +1,10 @@
 package team.moca.camo.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.response.MenuListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Like;
@@ -15,10 +18,13 @@ import team.moca.camo.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Transactional(readOnly = true)
 @Service
 public class MenuService {
+
+    private static final int DEFAULT_PAGE_LIST_SIZE = 10;
 
     private final MenuRepository menuRepository;
     private final CafeRepository cafeRepository;
@@ -39,8 +45,37 @@ public class MenuService {
                 );
         Cafe cafe = cafeRepository.findById(cafeId)
                 .orElseThrow(() -> new BusinessException(ClientRequestError.NON_EXISTENT_CAFE));
-        List<Menu> signatureMenus = menuRepository.findByCafeAndIsSignature(cafe, true);
-        return signatureMenus.stream()
+
+        Page<Menu> signatureMenus = getSignatureMenus(cafe);
+        return convertToMenuListResponseList(signatureMenus, requestUser);
+    }
+
+    private Page<Menu> getSignatureMenus(Cafe cafe) {
+        return menuRepository.findByCafeAndIsSignature(cafe, true, null);
+    }
+
+    public List<MenuListResponse> getBasicMenuListOfCafe(
+            final String cafeId, final String authenticatedAccountId, final PageDto page
+    ) {
+        User requestUser =
+                authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(
+                        authenticatedAccountId, userRepository::findWithLikeMenusById
+                );
+        Cafe cafe = cafeRepository.findById(cafeId)
+                .orElseThrow(() -> new BusinessException(ClientRequestError.NON_EXISTENT_CAFE));
+
+        Page<Menu> basicMenus = getBasicMenus(cafe, page);
+        page.updateTotalPages(basicMenus.getTotalPages());
+        return convertToMenuListResponseList(basicMenus, requestUser);
+    }
+
+    private Page<Menu> getBasicMenus(final Cafe cafe, final PageDto page) {
+        PageRequest pageRequest = PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE);
+        return menuRepository.findByCafeAndIsSignature(cafe, false, pageRequest);
+    }
+
+    private List<MenuListResponse> convertToMenuListResponseList(final Iterable<Menu> menus, final User requestUser) {
+        return StreamSupport.stream(menus.spliterator(), false)
                 .map(menu -> {
                     boolean isLike = isLikeByUser(requestUser, menu);
                     return MenuListResponse.of(menu, isLike);

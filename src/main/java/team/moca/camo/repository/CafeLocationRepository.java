@@ -15,5 +15,5 @@ public interface CafeLocationRepository extends MongoRepository<Location, String
 
     List<Location> findByCoordinatesNear(Point point, Distance distance);
 
-    Page<Location> findByIdInAndCoordinatesNear(List<String> idList, Point coordinates, Distance maxDistance, Pageable pageable);
+    Page<Location> findByIdInAndCoordinatesNear(List<String> cafeIdList, Point coordinates, Distance maxDistance, Pageable pageable);
 }

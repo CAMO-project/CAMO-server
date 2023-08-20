@@ -45,7 +45,7 @@ public class KakaoAuthServiceTest {
     @Test
     void integrateKakaoAccountWithEmailAccountSuccess() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
 
         // when
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
@@ -63,7 +63,7 @@ public class KakaoAuthServiceTest {
     @Test
     void integrateKakaoAccountWithEmailAccountFailUnauthenticatedUser() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
 
         // when
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.empty());
@@ -77,7 +77,7 @@ public class KakaoAuthServiceTest {
     @Test
     void integrateKakaoAccountWithEmailAccountFailInvalidKakaoToken() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
 
         // when
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
@@ -93,7 +93,7 @@ public class KakaoAuthServiceTest {
     @Test
     void loginWithKakaoAccountSuccess() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
 
         // when
         when(kakaoAuthApiService.getKakaoAccountId(anyString())).thenReturn(testUser.getKakaoId());
@@ -112,7 +112,7 @@ public class KakaoAuthServiceTest {
     @Test
     void loginWithKakaoAccountFailKakaoAccountDoNotIntegrated() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
 
         // when
         when(kakaoAuthApiService.getKakaoAccountId(anyString())).thenReturn(testUser.getKakaoId());
@@ -126,7 +126,7 @@ public class KakaoAuthServiceTest {
     @Test
     void loginWithKakaoAccountFailInvalidKakaoToken() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
 
         // when
         when(kakaoAuthApiService.getKakaoAccountId(anyString()))

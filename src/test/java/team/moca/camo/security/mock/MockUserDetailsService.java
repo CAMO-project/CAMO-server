@@ -9,6 +9,6 @@ public class MockUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return TestInstanceFactory.getTestUserInstance();
+        return TestInstanceFactory.getTestUser();
     }
 }

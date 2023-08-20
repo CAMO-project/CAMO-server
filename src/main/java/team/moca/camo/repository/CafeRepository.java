@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CafeRepository extends JpaRepository<Cafe, String> {
 
-    Page<Cafe> findDistinctByIdInAndTagsIdIn(List<String> idList, List<String> tagIdList, Pageable pageable);
+    Page<Cafe> findDistinctByIdInAndTagsIdIn(List<String> cafeIdList, List<String> tagIdList, Pageable pageable);
 
-    Page<Cafe> findByIdIn(List<String> idList, Pageable pageable);
+    Page<Cafe> findByIdIn(List<String> cafeIdList, Pageable pageable);
 }

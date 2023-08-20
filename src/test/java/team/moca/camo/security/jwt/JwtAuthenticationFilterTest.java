@@ -23,7 +23,7 @@ public class JwtAuthenticationFilterTest {
     @Test
     void passFilterValidJWT() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
         String token = jwtUtils.generateToken(testUser, Duration.ofMinutes(1));
 
         // when

@@ -51,8 +51,8 @@ class CafeControllerTest {
     @Test
     void nearbyCafeListSuccess() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
-        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
+        User testUser = TestInstanceFactory.getTestUser();
+        Cafe testCafe = TestInstanceFactory.getTestCafe();
         double latitude = 37.12345678;
         double longitude = 127.12345678;
 
@@ -83,7 +83,7 @@ class CafeControllerTest {
     @Test
     void nearbyCafeListGuestUserSuccess() throws Exception {
         // given
-        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
+        Cafe testCafe = TestInstanceFactory.getTestCafe();
         double latitude = 37.12345678;
         double longitude = 127.12345678;
 
@@ -112,8 +112,8 @@ class CafeControllerTest {
     @Test
     void nearbyCafeListFailWhenMissingCoordinates() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
-        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
+        User testUser = TestInstanceFactory.getTestUser();
+        Cafe testCafe = TestInstanceFactory.getTestCafe();
         double latitude = 37.12345678;
         double longitude = 127.12345678;
 

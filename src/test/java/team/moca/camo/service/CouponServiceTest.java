@@ -27,8 +27,8 @@ class CouponServiceTest {
     @Test
     void getUserStampsCountForCafeSuccess() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
-        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
+        User testUser = TestInstanceFactory.getTestUser();
+        Cafe testCafe = TestInstanceFactory.getTestCafe();
 
         // when
 

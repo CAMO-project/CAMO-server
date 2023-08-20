@@ -1,6 +1,7 @@
 package team.moca.camo.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,13 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import team.moca.camo.TestInstanceFactory;
-import team.moca.camo.common.GuestUser;
 import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.response.CafeDetailsResponse;
 import team.moca.camo.controller.dto.response.CafeListResponse;
@@ -33,6 +32,7 @@ import team.moca.camo.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -60,24 +60,53 @@ class CafeServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    private List<User> testUsers;
+    private List<Cafe> testCafes;
+    private List<Tag> testTags;
+    private List<Location> testLocations;
+
+    @BeforeEach
+    void testInit() {
+        testUsers = TestInstanceFactory.getTestUsers();
+        testCafes = TestInstanceFactory.getTestCafes();
+        for (int i = 0; i < 3; i++) {
+            User testUser = testUsers.get(i);
+            Cafe testCafe = testCafes.get(i);
+            testCafe.registerBy(testUser);
+        }
+
+        testTags = List.of(
+                new Tag("Test Tag 1"), new Tag("Test Tag 2"), new Tag("Test Tag 3")
+        );
+
+        testCafes.get(0).addTag(testTags.get(0));
+        testCafes.get(1).addTag(testTags.get(0));
+        testCafes.get(1).addTag(testTags.get(1));
+        testCafes.get(2).addTag(testTags.get(1));
+        testCafes.get(2).addTag(testTags.get(2));
+
+        testLocations = testCafes.stream()
+                .map(cafe -> Location.builder()
+                        .id(cafe.getId())
+                        .coordinates(new GeoJsonPoint(37.000000, 127.000000))
+                        .build())
+                .collect(Collectors.toList());
+
+    }
+
     @DisplayName("사용자 주변의 카페 목록을 가져올 수 있다.")
     @Test
     void getNearbyCafeListSuccess() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = testUsers.get(0);
+        Cafe testCafe = testCafes.get(0);
 
         // when
         when(authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(eq(testUser.getId()), any(Function.class)))
                 .thenReturn(testUser);
 
-        Cafe testCafe = Cafe.builder().name("Cafe A").address(Address.builder().city("test").town("test").build()).build();
-        Location testLocation = Location.builder().id(testCafe.getId()).coordinates(new GeoJsonPoint(127.1111, 37.1111)).build();
         when(cafeLocationRepository.findByCoordinatesNear(any(Point.class), any(Distance.class), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(
-                        testLocation,
-                        Location.builder().id("cafe_2").coordinates(new GeoJsonPoint(127.2222, 37.2222)).build(),
-                        Location.builder().id("cafe_3").coordinates(new GeoJsonPoint(127.3333, 37.3333)).build()
-                )));
+                .thenReturn(new PageImpl<>(testLocations));
         when(cafeRepository.findById(any())).thenReturn(Optional.of(testCafe));
 
         // then
@@ -93,8 +122,8 @@ class CafeServiceTest {
     @Test
     void getNearbyCafeListOfGuestSuccess() throws Exception {
         // given
-        User testUser = GuestUser.getInstance();
-        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
+        User testUser = testUsers.get(0);
+        Cafe testCafe = testCafes.get(0);
 
         // when
         when(authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(eq(testUser.getId()), any(Function.class)))
@@ -120,8 +149,8 @@ class CafeServiceTest {
     @Test
     void getCafeDetailsInformationSuccess() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
-        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
+        User testUser = testUsers.get(0);
+        Cafe testCafe = testCafes.get(0);
         testCafe.registerBy(testUser);
 
         // when
@@ -139,7 +168,7 @@ class CafeServiceTest {
         Address address = testCafe.getAddress();
         assertThat(cafeDetailsInformation.getAddress())
                 .isEqualTo(String.join(" ", address.getRoadAddress(), address.getAddressDetail()));
-        assertThat(cafeDetailsInformation.getTags()).hasSize(0);
+        assertThat(cafeDetailsInformation.getTags()).hasSize(1);
         assertThat(cafeDetailsInformation.getImages()).hasSize(0);
     }
 
@@ -147,8 +176,8 @@ class CafeServiceTest {
     @Test
     void getCafeDetailsInformationFailNonExistentId() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
-        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
+        User testUser = testUsers.get(0);
+        Cafe testCafe = testCafes.get(0);
 
         // when
         when(cafeRepository.findById(anyString())).thenReturn(Optional.empty());
@@ -158,25 +187,19 @@ class CafeServiceTest {
                 .isInstanceOf(BusinessException.class);
     }
 
-    @DisplayName("카페 목록을 정렬하여 조회할 수 있다.")
+    @DisplayName("카페 목록을 거리순으로 정렬하여 조회할 수 있다.")
     @Test
     void getSortedCafeListSuccess() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
-        Cafe testCafe = TestInstanceFactory.getTestCafeInstance();
-
-        testCafe.registerBy(testUser);
-        Tag tag1 = new Tag("Test Tag 1");
-        Tag tag2 = new Tag("Test Tag 2");
-        testCafe.addTag(tag1);
-        testCafe.addTag(tag2);
+        User testUser = testUsers.get(0);
 
         // when
         when(authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(eq(testUser.getId()), any(Function.class)))
                 .thenReturn(testUser);
         when(cafeLocationRepository.findByCoordinatesNear(any(Point.class), any(Distance.class), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(Location.builder().id(testCafe.getId()).build()), PageRequest.of(0, 10), 10));
-        when(cafeRepository.findById(testCafe.getId())).thenReturn(Optional.of(testCafe));
+                .thenReturn(new PageImpl<>(List.of(Location.builder().id(testCafes.get(0).getId()).build(), Location.builder().id(testCafes.get(1).getId()).build())));
+        when(cafeRepository.findById(testCafes.get(0).getId())).thenReturn(Optional.of(testCafes.get(0)));
+        when(cafeRepository.findById(testCafes.get(1).getId())).thenReturn(Optional.of(testCafes.get(1)));
 
         // then
         List<CafeListResponse> cafeListSortedByDistance = cafeService.getSortedAndFilteredCafeList(
@@ -185,6 +208,43 @@ class CafeServiceTest {
         );
 
         assertThat(cafeListSortedByDistance).isNotNull();
-        assertThat(cafeListSortedByDistance.get(0).getCafeId()).isEqualTo(testCafe.getId());
+        assertThat(cafeListSortedByDistance.size()).isEqualTo(2);
+        assertThat(cafeListSortedByDistance.get(0).getCafeId()).isEqualTo(testCafes.get(0).getId());
+        assertThat(cafeListSortedByDistance.get(1).getCafeId()).isEqualTo(testCafes.get(1).getId());
+    }
+
+    @DisplayName("카페 목록을 거리순으로 정렬하고 필터링하여 조회할 수 있다.")
+    @Test
+    void getSortedAndFilteredCafeListSuccess() throws Exception {
+        // given
+        User testUser = testUsers.get(0);
+
+        // when
+        when(authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(eq(testUser.getId()), any(Function.class)))
+                .thenReturn(testUser);
+        List<Location> locationList = testCafes.stream()
+                .map(cafe -> Location.builder()
+                        .id(cafe.getId())
+                        .coordinates(new GeoJsonPoint(37.000000, 127.000000))
+                        .build())
+                .collect(Collectors.toList());
+        when(cafeLocationRepository.findByCoordinatesNear(any(Point.class), any(Distance.class)))
+                .thenReturn(locationList);
+        when(cafeRepository.findDistinctByIdInAndTagsIdIn(any(List.class), any(List.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(testCafes.get(0), testCafes.get(1))));
+        when(cafeLocationRepository.findByIdInAndCoordinatesNear(any(List.class), any(Point.class), any(Distance.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(locationList.get(1), locationList.get(0))));
+        when(cafeRepository.findById(testCafes.get(0).getId())).thenReturn(Optional.of(testCafes.get(0)));
+        when(cafeRepository.findById(testCafes.get(1).getId())).thenReturn(Optional.of(testCafes.get(1)));
+
+        // then
+        List<CafeListResponse> cafeListSortedByDistance = cafeService.getSortedAndFilteredCafeList(
+                Coordinates.of(37.000000, 127.000000), SortType.DISTANCE,
+                List.of(testTags.get(0).getId()), testUser.getId(), PageDto.of(0)
+        );
+
+        assertThat(cafeListSortedByDistance).isNotNull();
+        assertThat(cafeListSortedByDistance.size()).isEqualTo(2);
+        assertThat(cafeListSortedByDistance.get(0).getCafeId()).isEqualTo(testCafes.get(1).getId());
     }
 }

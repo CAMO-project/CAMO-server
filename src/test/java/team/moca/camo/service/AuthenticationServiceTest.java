@@ -42,7 +42,7 @@ class AuthenticationServiceTest {
     @Test
     void issueNewAccessTokenValidRefreshToken() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
         userRepository.save(testUser);
 
         // when
@@ -60,7 +60,7 @@ class AuthenticationServiceTest {
     @Test
     void failIssueNewAccessTokenExpiredRefreshToken() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
         userRepository.save(testUser);
 
         // when
@@ -99,7 +99,7 @@ class AuthenticationServiceTest {
     @Test
     void failCreateNewEmailAccountWhenEmailDuplicate() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
         userRepository.save(testUser);
 
         // when
@@ -119,7 +119,7 @@ class AuthenticationServiceTest {
     @Test
     void failCreateNewEmailAccountWhenPhoneNumberDuplicate() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
         userRepository.save(testUser);
 
         // when
@@ -139,7 +139,7 @@ class AuthenticationServiceTest {
     @Test
     void failCreateNewEmailAccountWhenNicknameDuplicate() throws Exception {
         // given
-        User testUser = TestInstanceFactory.getTestUserInstance();
+        User testUser = TestInstanceFactory.getTestUser();
         userRepository.save(testUser);
 
         // when
@@ -177,7 +177,7 @@ class AuthenticationServiceTest {
     @Test
     void loginSuccessAccessTokenAndRefreshTokenIssued() throws Exception {
         // given
-        User user = TestInstanceFactory.getTestUserInstance();
+        User user = TestInstanceFactory.getTestUser();
         userRepository.save(user);
 
         // when
@@ -199,7 +199,7 @@ class AuthenticationServiceTest {
     @Test
     void loginFailNonExistEmail() throws Exception {
         // given
-        User user = TestInstanceFactory.getTestUserInstance();
+        User user = TestInstanceFactory.getTestUser();
         userRepository.save(user);
 
         // when
@@ -216,7 +216,7 @@ class AuthenticationServiceTest {
     @Test
     void loginFailInvalidPassword() throws Exception {
         // given
-        User user = TestInstanceFactory.getTestUserInstance();
+        User user = TestInstanceFactory.getTestUser();
         userRepository.save(user);
 
         // when

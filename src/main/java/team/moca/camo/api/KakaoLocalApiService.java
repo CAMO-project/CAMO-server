@@ -52,13 +52,10 @@ public class KakaoLocalApiService {
         assert responseBody != null;
         List<KakaoAddressResponse> addressList = responseBody.getDocuments();
 
-        for (KakaoAddressResponse address : addressList) {
-            if (address.getRegionType().equals("B")) {
-                return address;
-            }
-        }
-
-        throw new BusinessException(ExternalApiError.EMPTY_RESULT);
+        return addressList.stream()
+                .filter(address -> address.getRegionType().equals("B"))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(ExternalApiError.EMPTY_RESULT));
     }
 
     public Coordinates addressToCoordinates(final String address) {

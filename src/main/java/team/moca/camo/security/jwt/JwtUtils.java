@@ -34,13 +34,13 @@ public class JwtUtils implements Serializable {
     private String createToken(Date expiration, User user) {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setIssuer(jwtProperties.getIssuer())
-                .setIssuedAt(new Date())
-                .setExpiration(expiration)
-                .setSubject(user.getEmail())
-                .claim("id", user.getId())
+                .setIssuer(jwtProperties.getIssuer()) //발급 정보
+                .setIssuedAt(new Date()) //토큰 생성 시간
+                .setExpiration(expiration) //토큰 만료 시간
+                .setSubject(user.getEmail()) //토큰 주제 = 사용자 이메일
+                .claim("id", user.getId()) //사용자 id를 클레임으로 추가
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getEncodedSecretKey())
-                .compact();
+                .compact(); //JWT 형태로 토큰 생성
     }
 
     public boolean isValidToken(String token) {

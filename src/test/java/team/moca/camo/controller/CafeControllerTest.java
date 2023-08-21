@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import team.moca.camo.TestInstanceFactory;
 import team.moca.camo.config.ObjectMapperConfig;
-import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.User;
@@ -23,7 +22,6 @@ import team.moca.camo.service.CafeService;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -55,15 +53,16 @@ class CafeControllerTest {
         Cafe testCafe = TestInstanceFactory.getTestCafe();
         double latitude = 37.12345678;
         double longitude = 127.12345678;
+        String token = "token";
 
         // when
-        when(jwtUtils.isValidToken(anyString())).thenReturn(true);
-        when(jwtUtils.extractAccountIdFromToken(anyString())).thenReturn(testUser.getId());
-        when(cafeService.getNearbyCafeList(any(Coordinates.class), any(String.class), any(PageDto.class)))
+        when(jwtUtils.isValidToken(token)).thenReturn(true);
+        when(jwtUtils.extractAccountIdFromToken(token)).thenReturn(testUser.getId());
+        when(cafeService.getNearbyCafeList(eq(Coordinates.of(latitude, longitude)), eq(testUser.getId())))
                 .thenReturn(List.of(CafeListResponse.of(testCafe, true)));
         ResultActions resultActions =
                 mockMvc.perform(get("/api/cafes/nearby")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer token")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .param("page", "0")
                         .param("latitude", String.valueOf(latitude))
                         .param("longitude", String.valueOf(longitude)));
@@ -89,7 +88,7 @@ class CafeControllerTest {
 
         // when
         when(jwtUtils.extractAccountIdFromToken(anyString())).thenReturn(null);
-        when(cafeService.getNearbyCafeList(any(Coordinates.class), eq(null), any(PageDto.class)))
+        when(cafeService.getNearbyCafeList(eq(Coordinates.of(latitude, longitude)), eq(null)))
                 .thenReturn(List.of(CafeListResponse.of(testCafe, false)));
         ResultActions resultActions =
                 mockMvc.perform(get("/api/cafes/nearby")
@@ -113,14 +112,11 @@ class CafeControllerTest {
     void nearbyCafeListFailWhenMissingCoordinates() throws Exception {
         // given
         User testUser = TestInstanceFactory.getTestUser();
-        Cafe testCafe = TestInstanceFactory.getTestCafe();
         double latitude = 37.12345678;
         double longitude = 127.12345678;
 
         // when
         when(jwtUtils.extractAccountIdFromToken(anyString())).thenReturn(testUser.getId());
-        when(cafeService.getNearbyCafeList(any(Coordinates.class), eq(testUser.getId()), any(PageDto.class)))
-                .thenReturn(List.of(CafeListResponse.of(testCafe, true)));
         ResultActions missingLatitudeResultActions =
                 mockMvc.perform(get("/api/cafes/nearby")
                         .param("page", "0")

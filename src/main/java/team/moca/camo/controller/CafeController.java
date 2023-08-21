@@ -31,13 +31,12 @@ public class CafeController {
     }
 
     @GetMapping("/nearby")
-    public PageResponseDto<List<CafeListResponse>> userNearbyCafeList(
+    public ResponseDto<List<CafeListResponse>> userNearbyCafeList(
             @Authenticate(required = false) String authenticatedAccountId,
-            @ModelAttribute Coordinates coordinates, @RequestParam(name = "page", defaultValue = "0") int page
+            @ModelAttribute Coordinates coordinates
     ) {
-        PageDto pageDto = PageDto.of(page);
-        List<CafeListResponse> nearbyCafeList = cafeService.getNearbyCafeList(coordinates, authenticatedAccountId, pageDto);
-        return PageResponseDto.of(nearbyCafeList, "User's nearby cafe list.", pageDto);
+        List<CafeListResponse> nearbyCafeList = cafeService.getNearbyCafeList(coordinates, authenticatedAccountId);
+        return ResponseDto.of(nearbyCafeList, "User's nearby cafe list.");
     }
 
     @GetMapping("/{cafe_id}")

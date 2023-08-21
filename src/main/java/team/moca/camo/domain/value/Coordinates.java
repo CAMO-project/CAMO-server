@@ -22,4 +22,26 @@ public class Coordinates {
     public static Coordinates of(double latitude, double longitude) {
         return new Coordinates(latitude, longitude);
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Coordinates that = (Coordinates) object;
+
+        if (Double.compare(latitude, that.latitude) != 0) return false;
+        return Double.compare(longitude, that.longitude) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(latitude);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(longitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

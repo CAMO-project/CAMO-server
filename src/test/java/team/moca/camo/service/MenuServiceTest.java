@@ -14,6 +14,7 @@ import team.moca.camo.controller.dto.response.MenuListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Menu;
 import team.moca.camo.domain.User;
+import team.moca.camo.exception.BusinessException;
 import team.moca.camo.repository.CafeRepository;
 import team.moca.camo.repository.MenuRepository;
 import team.moca.camo.repository.UserRepository;
@@ -23,7 +24,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -67,6 +70,23 @@ class MenuServiceTest {
         assertThat(signatureMenus.get(0).getMenuName()).isEqualTo(testMenu.getName());
     }
 
+    @DisplayName("존재하지 않는 카페 ID의 경우 대표 메뉴 목록 조회에 실패한다.")
+    @Test
+    void getSignatureMenusOfCafeFailNonExistentCafe() throws Exception {
+        // given
+        User testUser = TestInstanceFactory.getTestUser();
+        Cafe testCafe = TestInstanceFactory.getTestCafe();
+
+        // when
+        when(authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(eq(testUser.getId()), any(Function.class)))
+                .thenReturn(testUser);
+        when(cafeRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        // then
+        assertThatThrownBy(() -> menuService.getSignatureMenuListOfCafe(testCafe.getId(), testUser.getId()))
+                .isInstanceOf(BusinessException.class);
+    }
+
     @DisplayName("카페 ID를 통해 해당 카페의 일반 메뉴 목록을 조회할 수 있다.")
     @Test
     void getBasicMenusOfCafeSuccess() throws Exception {
@@ -90,5 +110,22 @@ class MenuServiceTest {
         assertThat(basicMenus.size()).isEqualTo(2);
         assertThat(basicMenus.get(0).getMenuName()).isEqualTo(testMenu.getName());
         assertThat(pageDto.getTotalPages()).isEqualTo(1);
+    }
+
+    @DisplayName("존재하지 않는 카페 ID의 경우 일반 메뉴 목록 조회에 실패한다.")
+    @Test
+    void getBasicMenusOfCafeFailNonExistentCafe() throws Exception {
+        // given
+        User testUser = TestInstanceFactory.getTestUser();
+        Cafe testCafe = TestInstanceFactory.getTestCafe();
+
+        // when
+        when(authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(eq(testUser.getId()), any(Function.class)))
+                .thenReturn(testUser);
+        when(cafeRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        // then
+        assertThatThrownBy(() -> menuService.getBasicMenuListOfCafe(testCafe.getId(), testUser.getId(), PageDto.of(0)))
+                .isInstanceOf(BusinessException.class);
     }
 }

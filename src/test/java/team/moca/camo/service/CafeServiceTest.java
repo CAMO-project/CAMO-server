@@ -111,7 +111,7 @@ class CafeServiceTest {
 
         // then
         List<CafeListResponse> nearbyCafeList =
-                cafeService.getNearbyCafeList(Coordinates.of(37.1234, 127.1234), testUser.getId(), PageDto.of(0));
+                cafeService.getNearbyCafeList(Coordinates.of(37.1234, 127.1234), testUser.getId());
 
         assertThat(nearbyCafeList).isNotNull();
         assertThat(nearbyCafeList.size()).isEqualTo(3);
@@ -139,7 +139,7 @@ class CafeServiceTest {
 
         // then
         List<CafeListResponse> nearbyCafeList =
-                cafeService.getNearbyCafeList(Coordinates.of(37.1234, 127.1234), testUser.getId(), PageDto.of(0));
+                cafeService.getNearbyCafeList(Coordinates.of(37.1234, 127.1234), testUser.getId());
 
         assertThat(nearbyCafeList).isNotNull();
         assertThat(nearbyCafeList.size()).isEqualTo(3);

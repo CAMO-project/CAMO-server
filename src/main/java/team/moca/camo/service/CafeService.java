@@ -54,22 +54,19 @@ public class CafeService {
         this.authenticationUserFactory = authenticationUserFactory;
     }
 
-    public List<CafeListResponse> getNearbyCafeList(
-            final Coordinates userCoordinates, final String authenticatedAccountId, final PageDto page
-    ) {
+    public List<CafeListResponse> getNearbyCafeList(final Coordinates userCoordinates, final String authenticatedAccountId) {
         User requestUser =
                 authenticationUserFactory.getAuthenticatedUserOrGuestUserWithFindOption(
                         authenticatedAccountId, userRepository::findWithFavoriteCafesById
                 );
-        Page<Location> nearbyCafesLocation = getNearbyCafesLocation(userCoordinates, page);
-        page.updateTotalPages(1);
+        Page<Location> nearbyCafesLocation = getNearbyCafesLocation(userCoordinates);
 
         List<Cafe> nearbyCafes = getCafesFromCafesLocation(nearbyCafesLocation);
         return convertToCafeListResponse(nearbyCafes, requestUser);
     }
 
-    private Page<Location> getNearbyCafesLocation(final Coordinates userCoordinates, final PageDto page) {
-        PageRequest pageRequest = PageRequest.of(page.getCurrentPage(), DEFAULT_PAGE_LIST_SIZE);
+    private Page<Location> getNearbyCafesLocation(final Coordinates userCoordinates) {
+        PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE_LIST_SIZE);
         return cafeLocationRepository.findByCoordinatesNear(
                 new Point(userCoordinates.getLongitude(), userCoordinates.getLatitude()),
                 new Distance(CafeService.NEARBY_DISTANCE_KILOMETERS, Metrics.KILOMETERS), pageRequest

@@ -34,6 +34,7 @@ public class AWSImageService implements ImageService {
         this.imageRepository = imageRepository;
     }
 
+    @Transactional
     @Override
     public Image uploadImage(final MultipartFile multipartFile, final String directoryName)
             throws IOException {

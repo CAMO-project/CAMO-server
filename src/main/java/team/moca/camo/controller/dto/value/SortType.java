@@ -5,7 +5,9 @@ import lombok.Getter;
 @Getter
 public enum SortType {
 
-    RATING("ratingAverage"), DISTANCE("distnace"), FAVORITE("favoritesCount");
+    RATING("ratingAverage"),
+    DISTANCE("distance"),
+    FAVORITE("favoritesCount");
 
     private final String sortPropertyName;
 

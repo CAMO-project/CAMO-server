@@ -141,7 +141,7 @@ public class CafeService {
         List<String> nearbyCafeIdList = getNearbyCafeIdList(userCoordinates);
         PageRequest pageRequest = PageRequest.of(START_PAGE, INFINITY_PAGE);
         Page<Cafe> filteredCafes =
-                cafeRepository.findDistinctByIdInAndTagsIdIn(nearbyCafeIdList, filterTags, pageRequest);
+                cafeRepository.findDistinctByIdInAndTagsTagNameIn(nearbyCafeIdList, filterTags, pageRequest);
         return filteredCafes.stream()
                 .map(BaseEntity::getId)
                 .collect(Collectors.toList());
@@ -176,7 +176,7 @@ public class CafeService {
         Page<Cafe> sortedAndFilteredCafes;
         if (filterTags != null) {
             sortedAndFilteredCafes =
-                    cafeRepository.findDistinctByIdInAndTagsIdIn(nearbyCafeIdList, filterTags, pageRequest);
+                    cafeRepository.findDistinctByIdInAndTagsTagNameIn(nearbyCafeIdList, filterTags, pageRequest);
         } else {
             sortedAndFilteredCafes =
                     cafeRepository.findByIdIn(nearbyCafeIdList, pageRequest);

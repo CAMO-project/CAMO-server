@@ -230,7 +230,7 @@ class CafeServiceTest {
                 .collect(Collectors.toList());
         when(cafeLocationRepository.findByCoordinatesNear(any(Point.class), any(Distance.class)))
                 .thenReturn(locationList);
-        when(cafeRepository.findDistinctByIdInAndTagsIdIn(any(List.class), any(List.class), any(Pageable.class)))
+        when(cafeRepository.findDistinctByIdInAndTagsTagNameIn(any(List.class), any(List.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(testCafes.get(0), testCafes.get(1))));
         when(cafeLocationRepository.findByIdInAndCoordinatesNear(any(List.class), any(Point.class), any(Distance.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(locationList.get(1), locationList.get(0))));

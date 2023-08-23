@@ -36,4 +36,8 @@ public class Address {
         this.addressDetail = addressDetail;
         this.roadAddress = roadAddress;
     }
+
+    public void changeRoadAddress(String roadAddress) {
+        this.roadAddress = roadAddress;
+    }
 }

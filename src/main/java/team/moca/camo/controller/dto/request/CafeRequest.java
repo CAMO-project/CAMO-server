@@ -13,9 +13,12 @@ public class CafeRequest {
     @NotBlank(message = "카페 이름은 비어있을 수 없습니다.")
     private String name;
 
-    @Embedded
     @NotBlank(message = "카페 주소는 비어있을 수 없습니다.")
-    private Address address;
+    String state;
+    String city;
+    String town;
+    String addressDetail;
+    String roadAddress;
 
     @NotBlank(message = "카페 연락처는 비어있을 수 없습니다.")
     private String contact;

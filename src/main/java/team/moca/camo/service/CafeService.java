@@ -16,6 +16,7 @@ import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.Favorite;
 import team.moca.camo.domain.Location;
 import team.moca.camo.domain.User;
+import team.moca.camo.domain.embedded.Address;
 import team.moca.camo.domain.value.Coordinates;
 import team.moca.camo.domain.value.UserType;
 import team.moca.camo.exception.BusinessException;
@@ -103,10 +104,21 @@ public class CafeService {
     }
 
     public void createCafe(CafeRequest cafeRequest) {
+
+        //주소 넘겨받을때 어떻게 넘겨받죠?
+        //아래처럼 하나씩 넘겨받는거밖에 방법 없나요?
+        Address address = Address.builder()
+                .state(cafeRequest.getState())
+                .city(cafeRequest.getCity())
+                .town(cafeRequest.getTown())
+                .addressDetail(cafeRequest.getAddressDetail())
+                .roadAddress(cafeRequest.getRoadAddress())
+                .build();
+
         Cafe cafe = Cafe.builder()
                 .name(cafeRequest.getName())
                 .contact(cafeRequest.getContact())
-                .address(cafeRequest.getAddress())
+                .address(address)
                 .businessRegistrationNumber(cafeRequest.getBusinessRegistrationNumber())
                 .build();
 

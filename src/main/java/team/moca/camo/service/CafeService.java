@@ -105,8 +105,6 @@ public class CafeService {
 
     public void createCafe(CafeRequest cafeRequest) {
 
-        //주소 넘겨받을때 어떻게 넘겨받죠?
-        //아래처럼 하나씩 넘겨받는거밖에 방법 없나요?
         Address address = Address.builder()
                 .state(cafeRequest.getState())
                 .city(cafeRequest.getCity())
@@ -114,6 +112,8 @@ public class CafeService {
                 .addressDetail(cafeRequest.getAddressDetail())
                 .roadAddress(cafeRequest.getRoadAddress())
                 .build();
+
+        System.out.println("cafeRequest = " + cafeRequest);
 
         Cafe cafe = Cafe.builder()
                 .name(cafeRequest.getName())
@@ -130,7 +130,7 @@ public class CafeService {
         cafe.CreateCafeOwner(user);
 
         //손님 회원이면 에러던짐
-        if (user.getUserType() == UserType.CUSTOMER && user.getUserType() == UserType.CAFE_OWNER) {
+        if (user.getUserType() == UserType.CUSTOMER || user.getUserType() == UserType.CAFE_OWNER) {
             user.changeUserType(UserType.CAFE_OWNER);
         } else {
             throw new UserTypeException("손님 회원은 카페를 생성할 수 없습니다.");

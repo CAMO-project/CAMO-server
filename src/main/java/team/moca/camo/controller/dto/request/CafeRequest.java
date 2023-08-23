@@ -14,11 +14,11 @@ public class CafeRequest {
     private String name;
 
     @NotBlank(message = "카페 주소는 비어있을 수 없습니다.")
-    String state;
-    String city;
-    String town;
-    String addressDetail;
-    String roadAddress;
+    private String state;
+    private String city;
+    private String town;
+    private String addressDetail;
+    private String roadAddress;
 
     @NotBlank(message = "카페 연락처는 비어있을 수 없습니다.")
     private String contact;

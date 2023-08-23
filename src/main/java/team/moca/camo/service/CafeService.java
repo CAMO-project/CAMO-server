@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.moca.camo.common.GuestUser;
 import team.moca.camo.controller.dto.PageDto;
+import team.moca.camo.controller.dto.request.CafeRequest;
 import team.moca.camo.controller.dto.response.CafeDetailsResponse;
 import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.Cafe;
@@ -16,7 +17,9 @@ import team.moca.camo.domain.Favorite;
 import team.moca.camo.domain.Location;
 import team.moca.camo.domain.User;
 import team.moca.camo.domain.value.Coordinates;
+import team.moca.camo.domain.value.UserType;
 import team.moca.camo.exception.BusinessException;
+import team.moca.camo.exception.UserTypeException;
 import team.moca.camo.exception.error.AuthenticationError;
 import team.moca.camo.exception.error.ClientRequestError;
 import team.moca.camo.repository.CafeLocationRepository;
@@ -97,5 +100,31 @@ public class CafeService {
         List<Favorite> favorites = user.getFavorites();
         return favorites.stream()
                 .anyMatch(favorite -> favorite.getCafe().equals(cafe));
+    }
+
+    public void createCafe(CafeRequest cafeRequest) {
+        Cafe cafe = Cafe.builder()
+                .name(cafeRequest.getName())
+                .contact(cafeRequest.getContact())
+                .address(cafeRequest.getAddress())
+                .businessRegistrationNumber(cafeRequest.getBusinessRegistrationNumber())
+                .build();
+
+        /**
+         * 회원 그냥 가져다 쓰는거라서 회원 아이디 검증 따로 만들어야해용
+         * 일단은 cafeRequest 에 있는 회원 아이디 쓰겠습니다
+         */
+        User user = userRepository.findById(cafeRequest.getUserId()).get();
+        cafe.CreateCafeOwner(user);
+
+        //손님 회원이면 에러던짐
+        if (user.getUserType() == UserType.CUSTOMER && user.getUserType() == UserType.CAFE_OWNER) {
+            user.changeUserType(UserType.CAFE_OWNER);
+        } else {
+            throw new UserTypeException("손님 회원은 카페를 생성할 수 없습니다.");
+        }
+
+        cafeRepository.save(cafe);
+
     }
 }

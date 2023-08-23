@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import team.moca.camo.domain.embedded.Address;
 import team.moca.camo.domain.value.Domain;
+import team.moca.camo.repository.UserRepository;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -97,5 +98,9 @@ public class Cafe extends BaseEntity {
         this.requiredStamps = requiredStamps;
         this.address = address;
         this.businessRegistrationNumber = businessRegistrationNumber;
+    }
+
+    public void CreateCafeOwner(User owner) {
+        this.owner = owner;
     }
 }

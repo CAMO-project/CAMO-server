@@ -7,6 +7,7 @@ import team.moca.camo.common.annotation.Authenticate;
 import team.moca.camo.controller.dto.PageDto;
 import team.moca.camo.controller.dto.PageResponseDto;
 import team.moca.camo.controller.dto.ResponseDto;
+import team.moca.camo.controller.dto.request.CafeRequest;
 import team.moca.camo.controller.dto.response.CafeDetailsResponse;
 import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.Cafe;
@@ -52,10 +53,10 @@ public class CafeController {
         return ResponseDto.of(cafeDetailsResponse, String.format("Cafe details information of [%s]", cafeId));
     }
 
-//    @PostMapping("/new")
-//    public void RegisterCafe(@RequestBody CafeRequest cafeRequest) {
-//        cafeService.createCafe(cafeRequest);
-//    }
+    @PostMapping("/new")
+    public void RegisterCafe(@RequestBody CafeRequest cafeRequest) {
+        cafeService.createCafe(cafeRequest);
+    }
 //
 //    @PutMapping("/update/{id}")
 //    public void updateCafe(@PathVariable("id") String cafeId, @RequestBody CafeRequest cafeRequest, User owner) {

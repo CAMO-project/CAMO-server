@@ -168,4 +168,8 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public void changeUserType(UserType userType) {
+        this.userType = userType;
+    }
 }

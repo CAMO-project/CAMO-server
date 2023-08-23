@@ -23,6 +23,6 @@ public class CafeRequest {
     @NotBlank(message = "사업자 등록 번호는 비어있을 수 없습니다.")
     private String businessRegistrationNumber;
 
-    private String UserToken;
-
+    //토큰에서 받아와야 하는 유저 Id
+    private String userId;
 }

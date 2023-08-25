@@ -103,6 +103,7 @@ public class CafeService {
                 .anyMatch(favorite -> favorite.getCafe().equals(cafe));
     }
 
+    @Transactional
     public void createCafe(CafeRequest cafeRequest) {
 
         Address address = Address.builder()
@@ -120,6 +121,7 @@ public class CafeService {
                 .contact(cafeRequest.getContact())
                 .address(address)
                 .businessRegistrationNumber(cafeRequest.getBusinessRegistrationNumber())
+                .introduction(cafeRequest.getIntroduction())
                 .build();
 
         /**
@@ -137,6 +139,7 @@ public class CafeService {
         }
 
         cafeRepository.save(cafe);
+        userRepository.save(user);
 
     }
 }

@@ -53,6 +53,9 @@ public class Cafe extends BaseEntity {
     @Column(name = "business_registration_number", nullable = false, length = 15)
     private String businessRegistrationNumber;
 
+    @Column(name = "thumbnail", length = 500)
+    private String thumbnail;
+
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;

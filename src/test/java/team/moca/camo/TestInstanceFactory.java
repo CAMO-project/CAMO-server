@@ -3,6 +3,7 @@ package team.moca.camo;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import team.moca.camo.domain.Cafe;
+import team.moca.camo.domain.Tag;
 import team.moca.camo.domain.User;
 import team.moca.camo.domain.embedded.Address;
 
@@ -26,13 +27,22 @@ public class TestInstanceFactory {
     }
 
     public static Cafe getTestCafe() {
-        return Cafe.builder()
+        Cafe cafe = Cafe.builder()
                 .name("Cafe A")
                 .contact("01012345678")
                 .introduction("This is test cafe")
                 .businessRegistrationNumber("5829463486")
                 .address(Address.builder().city("test").town("test").build())
                 .build();
+        cafe.registerBy(User.builder()
+                .email("cafeOwner@gmail.com")
+                .password(PASSWORD_ENCODER.encode("test1234"))
+                .nickname("cafeOwner")
+                .phone("01087654321")
+                .build());
+        cafe.addTag(new Tag("TAG A"));
+        cafe.addTag(new Tag("TAG B"));
+        return cafe;
     }
 
     public static List<User> getTestUsers() {

@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import team.moca.camo.TestInstanceFactory;
 import team.moca.camo.config.ObjectMapperConfig;
+import team.moca.camo.controller.dto.response.CafeDetailsResponse;
 import team.moca.camo.controller.dto.response.CafeListResponse;
 import team.moca.camo.domain.Cafe;
 import team.moca.camo.domain.User;
@@ -133,6 +134,61 @@ class CafeControllerTest {
                 .andDo(print());
         missingLongitudeResultActions.andExpectAll(
                         status().isBadRequest()
+                )
+                .andDo(print());
+    }
+
+    @DisplayName("인증된 사용자가 카페 상세 정보 조회에 성공한다.")
+    @Test
+    void cafeDetailsSuccess() throws Exception {
+        // given
+        List<User> testUsers = TestInstanceFactory.getTestUsers();
+        Cafe testCafe = TestInstanceFactory.getTestCafe();
+
+        // when
+        when(jwtUtils.isValidToken(anyString())).thenReturn(true);
+        when(jwtUtils.extractAccountIdFromToken(anyString())).thenReturn(testUsers.get(0).getId());
+        when(cafeService.getCafeDetailsInformation(testCafe.getId(), testUsers.get(0).getId()))
+                .thenReturn(CafeDetailsResponse.of(testCafe, 0, false, false));
+
+        ResultActions resultActions =
+                mockMvc.perform(get("/api/cafes/{cafe_id}", testCafe.getId())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + "token"));
+
+        // then
+        resultActions.andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.data.body.cafe_id").value(testCafe.getId()),
+                        jsonPath("$.data.body.cafe_name").value(testCafe.getName()),
+                        jsonPath("$.data.body.address")
+                                .value(String.join(" ", testCafe.getAddress().getRoadAddress(), testCafe.getAddress().getAddressDetail())),
+                        jsonPath("$.data.body.tags[0]").value(testCafe.getTags().get(0).getTagName())
+                )
+                .andDo(print());
+    }
+
+    @DisplayName("인증되지 않은 사용자가 카페 상세 정보 조회에 성공한다.")
+    @Test
+    void cafeDetailsGuestUserSuccess() throws Exception {
+        // given
+        Cafe testCafe = TestInstanceFactory.getTestCafe();
+
+        // when
+        when(jwtUtils.extractAccountIdFromToken(anyString())).thenReturn(null);
+        when(cafeService.getCafeDetailsInformation(testCafe.getId(), null))
+                .thenReturn(CafeDetailsResponse.of(testCafe, 0, false, false));
+
+        ResultActions resultActions =
+                mockMvc.perform(get("/api/cafes/{cafe_id}", testCafe.getId()));
+
+        // then
+        resultActions.andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.data.body.cafe_id").value(testCafe.getId()),
+                        jsonPath("$.data.body.cafe_name").value(testCafe.getName()),
+                        jsonPath("$.data.body.address")
+                                .value(String.join(" ", testCafe.getAddress().getRoadAddress(), testCafe.getAddress().getAddressDetail())),
+                        jsonPath("$.data.body.tags[0]").value(testCafe.getTags().get(0).getTagName())
                 )
                 .andDo(print());
     }
